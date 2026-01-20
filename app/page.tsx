@@ -87,12 +87,12 @@ export default function Dashboard() {
       <div className="flex flex-1 overflow-hidden">
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
-          className={`${isSidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 flex flex-col shadow-md border-r bg-white z-40 sticky top-16 h-[calc(100vh-64px)] overflow-y-auto overflow-x-hidden`}
-          style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }}
+          className={`${isSidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 flex flex-col shadow-md border-r bg-white sticky top-16 h-[calc(100vh-64px)] overflow-y-auto overflow-x-hidden z-40`}
+          style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }} // Sidebar Gradient [cite: 22]
         >
           <nav className="flex-1 py-4">
             <ul className="space-y-1 px-3">
-              {/* Primary Links - All using Brand Purple for Professionalism */}
+              {/* Primary Links - Unified Brand Purple  */}
               {[
                 { id: 'dash', icon: <Home size={20}/>, label: 'Dashboard', active: true },
                 { id: 'reg', icon: <Users size={20}/>, label: 'New Registration' },
@@ -100,20 +100,25 @@ export default function Dashboard() {
                 { id: 'list', icon: <Users size={20}/>, label: 'Patient List' },
               ].map((item) => (
                 <li key={item.id} className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
-                    style={{ color: item.active ? '#9575cd' : '#455a64', backgroundColor: item.active ? 'rgba(149, 117, 205, 0.15)' : '' }}>
+                    style={{ 
+                      color: item.active ? '#9575cd' : '#455a64', 
+                      backgroundColor: item.active ? 'rgba(149, 117, 205, 0.15)' : '' 
+                    }}>
                   <span className="flex-shrink-0">{item.icon}</span>
-                  {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap uppercase tracking-tight">{item.label}</span>}
+                  {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap uppercase tracking-tight">
+                    {item.label}
+                  </span>}
                 </li>
               ))}
 
-              {/* Collapsible Menu: Test (Purple) */}
+              {/* Collapsible Menu: Test (Purple Icon ) */}
               <div className="mt-1">
                 <li 
                   onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, test: !prev.test }))}
                   className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-slate-700 font-semibold text-sm cursor-pointer hover:bg-white/50`}
                 >
                   <div className="flex items-center gap-3">
-                    <TestTube size={20} className="text-purple-500 flex-shrink-0" />
+                    <TestTube size={20} className="text-[#9575cd] flex-shrink-0" />
                     {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Test</span>}
                   </div>
                   {isSidebarOpen && (openMenus.test ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />)}
@@ -121,7 +126,7 @@ export default function Dashboard() {
                 {isSidebarOpen && openMenus.test && (
                   <ul className="ml-9 mt-1 space-y-1 border-l-2 border-purple-200">
                     {['Tests', 'Specimen & Formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-purple-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
+                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-[#9575cd] hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[1px] bg-purple-200"></span>
                         {sub}
                       </li>
@@ -130,14 +135,14 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Collapsible Menu: Setup (Cyan) */}
+              {/* Collapsible Menu: Setup (Cyan Icon [cite: 6]) */}
               <div className="mt-1">
                 <li 
                   onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, setup: !prev.setup }))}
                   className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-slate-700 font-semibold text-sm cursor-pointer hover:bg-white/50`}
                 >
                   <div className="flex items-center gap-3">
-                    <Settings size={20} className="text-cyan-500 flex-shrink-0" />
+                    <Settings size={20} className="text-[#4dd0e1] flex-shrink-0" />
                     {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Setup</span>}
                   </div>
                   {isSidebarOpen && (openMenus.setup ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />)}
@@ -145,7 +150,7 @@ export default function Dashboard() {
                 {isSidebarOpen && openMenus.setup && (
                   <ul className="ml-9 mt-1 space-y-1 border-l-2 border-cyan-200">
                     {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-cyan-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
+                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-[#4dd0e1] hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[1px] bg-cyan-200"></span>
                         {sub}
                       </li>
@@ -154,14 +159,14 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Collapsible Menu: Lab Management (Pink) */}
+              {/* Collapsible Menu: Lab Management (Pink Icon [cite: 8]) */}
               <div className="mt-1">
                 <li 
                   onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, mgmt: !prev.mgmt }))}
                   className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-slate-700 font-semibold text-sm cursor-pointer hover:bg-white/50`}
                 >
                   <div className="flex items-center gap-3">
-                    <Users size={20} className="text-pink-500 flex-shrink-0" />
+                    <Users size={20} className="text-[#f06292] flex-shrink-0" />
                     {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Management</span>}
                   </div>
                   {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />)}
@@ -169,7 +174,7 @@ export default function Dashboard() {
                 {isSidebarOpen && openMenus.mgmt && (
                   <ul className="ml-9 mt-1 space-y-1 border-l-2 border-pink-200">
                     {['Referral List', 'Manage Users', 'Processing Lab'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-pink-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
+                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-[#f06292] hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[1px] bg-pink-200"></span>
                         {sub}
                       </li>
