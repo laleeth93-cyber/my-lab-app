@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    /* BLOCK COMPILER SETTINGS OPEN */
     "target": "ES2017",
     "lib": [
       "ES2017",
@@ -16,6 +17,9 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
+    /* BLOCK COMPILER SETTINGS CLOSE */
+
+    /* BLOCK PATH MAPPING OPEN */
     "plugins": [
       {
         "name": "next"
@@ -28,7 +32,9 @@
     },
     "resolveJsonModule": true,
     "isolatedModules": true
+    /* BLOCK PATH MAPPING CLOSE */
   },
+  /* BLOCK FILE INCLUSION OPEN */
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -38,4 +44,5 @@
   "exclude": [
     "node_modules"
   ]
+  /* BLOCK FILE INCLUSION CLOSE */
 }

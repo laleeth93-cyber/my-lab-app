@@ -1,19 +1,28 @@
 "use client";
 
+// BLOCK DASHBOARD IMPORTS OPEN
 import React, { useState } from 'react';
+// BLOCK DASHBOARD IMPORTS CLOSE
 
+// BLOCK DASHBOARD LOGIC OPEN
 export default function LabDashboard() {
+  // BLOCK PATIENT DATA MEMORY OPEN
   const [patients, setPatients] = useState([
     { id: 1, name: "Sample Patient", age: 25, gender: "Male", phone: "0000000000", status: "Pending" }
   ]);
+  // BLOCK PATIENT DATA MEMORY CLOSE
 
   return (
     <main className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md border border-gray-100">
+        
+        {/* BLOCK DASHBOARD HEADER OPEN */}
         <h1 className="text-3xl font-bold text-blue-900 mb-6 flex items-center gap-2">
           🔬 SmartLab Reception
         </h1>
+        {/* BLOCK DASHBOARD HEADER CLOSE */}
         
+        {/* BLOCK PATIENT TABLE OPEN */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -40,7 +49,10 @@ export default function LabDashboard() {
             </tbody>
           </table>
         </div>
+        {/* BLOCK PATIENT TABLE CLOSE */}
+
       </div>
     </main>
   );
 }
+// BLOCK DASHBOARD LOGIC CLOSE

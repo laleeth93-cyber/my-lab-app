@@ -1,11 +1,16 @@
+// BLOCK LAYOUT IMPORTS OPEN
 import type { Metadata } from "next";
-import "./globals.css"; // Now this will work because the file is in the same folder
+import "./globals.css"; 
+// BLOCK LAYOUT IMPORTS CLOSE
 
+// BLOCK SITE METADATA OPEN
 export const metadata: Metadata = {
   title: "SmartLab Portal",
   description: "Laboratory Management System",
 };
+// BLOCK SITE METADATA CLOSE
 
+// BLOCK ROOT LAYOUT COMPONENT OPEN
 export default function RootLayout({
   children,
 }: {
@@ -19,3 +24,4 @@ export default function RootLayout({
     </html>
   );
 }
+// BLOCK ROOT LAYOUT COMPONENT CLOSE
