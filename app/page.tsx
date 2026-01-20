@@ -17,29 +17,27 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: colors.background }}>
+    <div className="h-screen w-full flex flex-col overflow-hidden bg-[#eceff1]">
       
       {/* BLOCK HEADER OPEN */}
       <header 
-        className="h-16 flex items-center justify-between px-6 shadow-sm border-b sticky top-0 z-50 gap-4"
-        style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }} // Gradient from Page 1 of PDF [cite: 18]
+        className="h-16 flex items-center justify-between px-6 shadow-sm border-b shrink-0 z-50"
+        style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }}
       >
-        {/* Left Side: Menu & Logo */}
         <div className="flex items-center gap-4 min-w-fit">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 rounded-lg bg-blue-200/30 transition hover:bg-white/40"
-            style={{ color: '#9575cd' }} // Purple Icon [cite: 20]
+            className="p-2 rounded-lg bg-white/20 transition hover:bg-white/40"
+            style={{ color: '#9575cd' }}
           >
             <Menu size={20} />
           </button>
           <div className="flex items-center gap-2">
-            <TestTube size={24} style={{ color: '#9575cd' }} /> {/* Logo Icon [cite: 19] */}
-            <h1 className="text-lg font-bold" style={{ color: '#f06292' }}>MediLab Pro</h1> {/* Pink Logo Text [cite: 19] */}
+            <TestTube size={24} style={{ color: '#9575cd' }} />
+            <h1 className="text-lg font-bold" style={{ color: '#f06292' }}>MediLab Pro</h1>
           </div>
         </div>
 
-        {/* Center: Search Bar */}
         <div className="flex-1 max-w-xs relative">
           <input 
             type="text" 
@@ -51,61 +49,45 @@ export default function Dashboard() {
             <Search size={16} style={{ color: '#9575cd' }} />
           </span>
         </div>
-        {/* Right Side: Lab Name & User Profile */}
-        <div className="flex items-center gap-6 min-w-fit">
+
+        <div className="flex items-center gap-4 min-w-fit">
           <div className="hidden lg:flex items-center gap-2 text-slate-700">
-             <div className="p-1.5 bg-slate-200/50 rounded shadow-inner">🏥</div>
              <span className="font-semibold text-sm">Metropolitan Diagnostic Center</span>
           </div>
-
-          <div className="flex items-center gap-3">
-            {/* Notification Icons with Badges */}
+          <div className="flex items-center gap-2">
             <div className="relative p-2 rounded-lg bg-purple-200/30" style={{ color: '#9575cd' }}>
               <Bell size={20} />
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white font-bold"
-                    style={{ background: 'linear-gradient(to bottom, #f06292, #d81b60)' }}>3</span> {/* Pink Badge [cite: 38] */}
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] text-white font-bold"
+                    style={{ background: '#f06292' }}>3</span>
             </div>
-            
-            <button className="p-2 rounded-lg bg-purple-200/30 text-slate-600">
-              <Settings size={20} style={{ color: '#455a64' }} />
-            </button>
-
-            {/* User Profile Capsule */}
-            <div className="flex items-center gap-2 bg-white/90 rounded-full pl-1 pr-3 py-1 shadow-sm border border-white">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm"
-                   style={{ background: 'linear-gradient(to bottom right, #9575cd, #f06292)' }}> {/* Avatar Gradient [cite: 39] */}
-                JD
-              </div>
-              <span className="text-sm font-medium text-slate-700">Dr. John Doe</span>
-              <Settings size={14} className="text-slate-400" />
+            <div className="flex items-center gap-2 bg-white/90 rounded-full pl-1 pr-3 py-1 shadow-sm border">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-xs"
+                   style={{ background: 'linear-gradient(to bottom right, #9575cd, #f06292)' }}>JD</div>
+              <span className="text-xs font-medium text-slate-700">Dr. John Doe</span>
             </div>
           </div>
         </div>
       </header>
-      {/* BLOCK HEADER CLOSE  */}
+      {/* BLOCK HEADER CLOSE */}
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden"> 
+      {/* This 'flex-1 overflow-hidden' is the key to fixing the sidebar */}
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
-          className={`${isSidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 flex flex-col shadow-md border-r sticky top-16 h-[calc(100vh-64px)] overflow-y-auto overflow-x-hidden z-40`}
-          style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }} // Restored MediLab Pro Gradient
+          className={`${isSidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 flex flex-col shadow-md border-r bg-white h-full overflow-y-auto shrink-0 z-40`}
+          style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }}
         >
           <nav className="flex-1 py-4">
             <ul className="space-y-1 px-3">
               
-              {/* UNIFIED ICON COLOR: #455a64 */}
-              
-              {/* Dashboard - Highlighted when active */}
-              <li className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
-                  style={{ 
-                    backgroundColor: 'rgba(149, 117, 205, 0.15)', // Light purple active background
-                    color: '#9575cd' // Brand purple for active state
-                  }}>
+              {/* Dashboard */}
+              <li className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer bg-white/40 shadow-sm`}
+                  style={{ color: '#9575cd' }}>
                 <Home size={20} />
-                {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap">Dashboard</span>}
+                {isSidebarOpen && <span className="font-bold text-sm uppercase">Dashboard</span>}
               </li>
 
-              {/* Standard Menu Items - Unified Slate Color */}
+              {/* General Items */}
               {[
                 { id: 'reg', icon: <Users size={20}/>, label: 'New Registration' },
                 { id: 'entry', icon: <FileText size={20}/>, label: 'Result Entry' },
@@ -113,83 +95,83 @@ export default function Dashboard() {
               ].map((item) => (
                 <li key={item.id} className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-[#455a64]`}>
                   <span className="flex-shrink-0">{item.icon}</span>
-                  {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap">{item.label}</span>}
+                  {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap uppercase tracking-tight">{item.label}</span>}
                 </li>
               ))}
 
-              {/* Dropdown: Test */}
+              {/* Test Dropdown */}
               <div className="mt-1">
                 <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, test: !prev.test }))}
                   className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
                 >
                   <div className="flex items-center gap-3">
                     <TestTube size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap">Test</span>}
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Test</span>}
                   </div>
-                  {isSidebarOpen && (openMenus.test ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+                  {isSidebarOpen && (openMenus.test ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
                 </li>
                 {isSidebarOpen && openMenus.test && (
                   <ul className="ml-9 mt-1 space-y-1 border-l-2 border-purple-200">
                     {['Tests', 'Specimen & Formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-semibold text-slate-500 hover:text-[#9575cd] cursor-pointer pl-4 whitespace-nowrap">{sub}</li>
+                      <li key={sub} className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#9575cd] cursor-pointer pl-4 uppercase">{sub}</li>
                     ))}
                   </ul>
                 )}
               </div>
 
-              {/* Dropdown: Setup */}
+              {/* Setup Dropdown */}
               <div className="mt-1">
                 <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, setup: !prev.setup }))}
                   className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
                 >
                   <div className="flex items-center gap-3">
                     <Settings size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap">Setup</span>}
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Setup</span>}
                   </div>
-                  {isSidebarOpen && (openMenus.setup ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+                  {isSidebarOpen && (openMenus.setup ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
                 </li>
                 {isSidebarOpen && openMenus.setup && (
                   <ul className="ml-9 mt-1 space-y-1 border-l-2 border-cyan-200">
                     {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-semibold text-slate-500 hover:text-[#4dd0e1] cursor-pointer pl-4 whitespace-nowrap">{sub}</li>
+                      <li key={sub} className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#4dd0e1] cursor-pointer pl-4 uppercase">{sub}</li>
                     ))}
                   </ul>
                 )}
               </div>
 
-              {/* Dropdown: Lab Management */}
+              {/* Management Dropdown */}
               <div className="mt-1">
                 <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, mgmt: !prev.mgmt }))}
                   className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
                 >
                   <div className="flex items-center gap-3">
                     <Users size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap">Lab Management</span>}
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Management</span>}
                   </div>
-                  {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+                  {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
                 </li>
                 {isSidebarOpen && openMenus.mgmt && (
                   <ul className="ml-9 mt-1 space-y-1 border-l-2 border-pink-200">
                     {['Referral List', 'Manage Users', 'Processing Lab'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-semibold text-slate-500 hover:text-[#f06292] cursor-pointer pl-4 whitespace-nowrap">{sub}</li>
+                      <li key={sub} className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#f06292] cursor-pointer pl-4 uppercase">{sub}</li>
                     ))}
                   </ul>
                 )}
               </div>
 
-              {/* Lab Profile */}
-              <li className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 mt-1 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-[#455a64] font-semibold text-sm`}>
+              {/* Profile */}
+              <li className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 mt-1 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-[#455a64] font-semibold text-sm uppercase`}>
                 <FileText size={20} className="flex-shrink-0" />
-                {isSidebarOpen && <span className="whitespace-nowrap">Lab Profile</span>}
+                {isSidebarOpen && <span>Lab Profile</span>}
               </li>
 
             </ul>
           </nav>
 
-          <div className="p-4 border-t border-purple-100 mt-auto bg-white/20">
+          <div className="p-4 border-t border-purple-100 bg-white/20">
              <div className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2 rounded-lg cursor-pointer hover:bg-red-50 text-[#f06292]`}>
-               <LogOut size={20} className="flex-shrink-0" />
-               {isSidebarOpen && <span className="text-sm font-bold whitespace-nowrap">Logout</span>}
+               <LogOut size={20} />
+               {isSidebarOpen && <span className="text-sm font-bold uppercase">Logout</span>}
              </div>
           </div>
         </aside>
