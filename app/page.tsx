@@ -41,15 +41,15 @@ export default function Dashboard() {
         </div>
 
         {/* Center: Search Bar */}
-        <div className="flex-1 max-w-xl relative">
+        <div className="flex-1 max-w-md relative">
           <input 
             type="text" 
             placeholder="Search patients, tests, reports..." 
-            className="w-full py-2 px-4 pr-10 rounded-full border bg-white/80 focus:outline-none focus:ring-2 transition"
-            style={{ borderColor: 'rgba(77,208,225,0.4)', color: '#455a64' }} // Light Cyan Border [cite: 30]
+            className="w-full py-1.5 px-4 pr-10 rounded-full border bg-white/80 text-sm focus:outline-none focus:ring-2 transition"
+            style={{ borderColor: 'rgba(77,208,225,0.4)', color: '#455a64' }} 
           />
-          <span className="absolute right-4 top-2.5 text-purple-400">
-            <Search size={18} style={{ color: '#9575cd' }} />
+          <span className="absolute right-4 top-2 text-purple-400">
+            <Search size={16} style={{ color: '#9575cd' }} />
           </span>
         </div>
 
