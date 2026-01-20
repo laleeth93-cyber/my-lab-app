@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Menu, X, Home, Users, TestTube, FileText, Settings, LogOut, Bell, Search } from 'lucide-react';
-
+import { Menu, X, Home, Users, TestTube, FileText, Settings, LogOut, Bell, Search, ChevronDown, ChevronUp } from 'lucide-react';
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
@@ -88,12 +87,12 @@ export default function Dashboard() {
       <div className="flex flex-1 overflow-hidden">
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
-          className={`${isSidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 flex flex-col shadow-md border-r h-[calc(100vh-64px)] overflow-y-auto bg-white overflow-x-hidden`}
+          className={`${isSidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 flex flex-col shadow-md border-r bg-white z-40 sticky top-16 h-[calc(100vh-64px)] overflow-y-auto overflow-x-hidden`}
           style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }}
         >
           <nav className="flex-1 py-4">
             <ul className="space-y-1 px-3">
-              {/* Primary Links */}
+              {/* Primary Links - All using Brand Purple for Professionalism */}
               {[
                 { id: 'dash', icon: <Home size={20}/>, label: 'Dashboard', active: true },
                 { id: 'reg', icon: <Users size={20}/>, label: 'New Registration' },
@@ -101,13 +100,13 @@ export default function Dashboard() {
                 { id: 'list', icon: <Users size={20}/>, label: 'Patient List' },
               ].map((item) => (
                 <li key={item.id} className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
-                    style={{ color: item.active ? '#9575cd' : '#455a64', backgroundColor: item.active ? 'rgba(149, 117, 205, 0.1)' : '' }}>
+                    style={{ color: item.active ? '#9575cd' : '#455a64', backgroundColor: item.active ? 'rgba(149, 117, 205, 0.15)' : '' }}>
                   <span className="flex-shrink-0">{item.icon}</span>
-                  {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap">{item.label}</span>}
+                  {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap uppercase tracking-tight">{item.label}</span>}
                 </li>
               ))}
 
-              {/* Collapsible Menu: Test */}
+              {/* Collapsible Menu: Test (Purple) */}
               <div className="mt-1">
                 <li 
                   onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, test: !prev.test }))}
@@ -115,15 +114,15 @@ export default function Dashboard() {
                 >
                   <div className="flex items-center gap-3">
                     <TestTube size={20} className="text-purple-500 flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap">Test</span>}
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Test</span>}
                   </div>
-                  {isSidebarOpen && <span className={`transition-transform duration-200 ${openMenus.test ? 'rotate-180' : ''}`}>▼</span>}
+                  {isSidebarOpen && (openMenus.test ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />)}
                 </li>
                 {isSidebarOpen && openMenus.test && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-purple-200 animate-in fade-in slide-in-from-top-1">
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-purple-200">
                     {['Tests', 'Specimen & Formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
-                      <li key={sub} className="p-2 text-sm font-semibold text-slate-600 hover:text-purple-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap">
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-purple-200"></span>
+                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-purple-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[1px] bg-purple-200"></span>
                         {sub}
                       </li>
                     ))}
@@ -131,7 +130,7 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Collapsible Menu: Setup */}
+              {/* Collapsible Menu: Setup (Cyan) */}
               <div className="mt-1">
                 <li 
                   onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, setup: !prev.setup }))}
@@ -139,15 +138,15 @@ export default function Dashboard() {
                 >
                   <div className="flex items-center gap-3">
                     <Settings size={20} className="text-cyan-500 flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap">Setup</span>}
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Setup</span>}
                   </div>
-                  {isSidebarOpen && <span className={`transition-transform duration-200 ${openMenus.setup ? 'rotate-180' : ''}`}>▼</span>}
+                  {isSidebarOpen && (openMenus.setup ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />)}
                 </li>
                 {isSidebarOpen && openMenus.setup && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-cyan-200 animate-in fade-in slide-in-from-top-1">
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-cyan-200">
                     {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
-                      <li key={sub} className="p-2 text-sm font-semibold text-slate-600 hover:text-cyan-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap">
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-cyan-200"></span>
+                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-cyan-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[1px] bg-cyan-200"></span>
                         {sub}
                       </li>
                     ))}
@@ -155,7 +154,7 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Collapsible Menu: Lab Management */}
+              {/* Collapsible Menu: Lab Management (Pink) */}
               <div className="mt-1">
                 <li 
                   onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, mgmt: !prev.mgmt }))}
@@ -163,15 +162,15 @@ export default function Dashboard() {
                 >
                   <div className="flex items-center gap-3">
                     <Users size={20} className="text-pink-500 flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap">Lab Management</span>}
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Management</span>}
                   </div>
-                  {isSidebarOpen && <span className={`transition-transform duration-200 ${openMenus.mgmt ? 'rotate-180' : ''}`}>▼</span>}
+                  {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />)}
                 </li>
                 {isSidebarOpen && openMenus.mgmt && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-pink-200 animate-in fade-in slide-in-from-top-1">
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-pink-200">
                     {['Referral List', 'Manage Users', 'Processing Lab'].map((sub) => (
-                      <li key={sub} className="p-2 text-sm font-semibold text-slate-600 hover:text-pink-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap">
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-pink-200"></span>
+                      <li key={sub} className="p-2 text-xs font-bold text-slate-500 hover:text-pink-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap uppercase">
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[1px] bg-pink-200"></span>
                         {sub}
                       </li>
                     ))}
@@ -182,7 +181,7 @@ export default function Dashboard() {
               {/* Lab Profile */}
               <li className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 mt-1 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-slate-700 font-semibold text-sm`}>
                 <FileText size={20} className="text-blue-500 flex-shrink-0" />
-                {isSidebarOpen && <span className="whitespace-nowrap">Lab Profile</span>}
+                {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Lab Profile</span>}
               </li>
             </ul>
           </nav>
@@ -190,7 +189,7 @@ export default function Dashboard() {
           <div className="p-4 border-t border-purple-100 mt-auto bg-white/20">
              <div className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2 rounded-lg cursor-pointer hover:bg-red-50 text-red-400`}>
                <LogOut size={20} className="flex-shrink-0" />
-               {isSidebarOpen && <span className="text-sm font-bold whitespace-nowrap">Logout</span>}
+               {isSidebarOpen && <span className="text-sm font-bold whitespace-nowrap uppercase">Logout</span>}
              </div>
           </div>
         </aside>
