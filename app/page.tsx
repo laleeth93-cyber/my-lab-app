@@ -1,58 +1,73 @@
-"use client";
+import React from 'react';
 
-// BLOCK DASHBOARD IMPORTS OPEN
-import React, { useState } from 'react';
-// BLOCK DASHBOARD IMPORTS CLOSE
-
-// BLOCK DASHBOARD LOGIC OPEN
-export default function LabDashboard() {
-  // BLOCK PATIENT DATA MEMORY OPEN
-  const [patients, setPatients] = useState([
-    { id: 1, name: "Sample Patient", age: 25, gender: "Male", phone: "0000000000", status: "Pending" }
-  ]);
-  // BLOCK PATIENT DATA MEMORY CLOSE
-
+export default function Home() {
   return (
-    <main className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md border border-gray-100">
+    <main className="p-8 bg-gray-50 min-h-screen">
+      <div className="max-w-4xl mx-auto space-y-8">
         
-        {/* BLOCK DASHBOARD HEADER OPEN */}
-        <h1 className="text-3xl font-bold text-blue-900 mb-6 flex items-center gap-2">
-          🔬 SmartLab Reception
-        </h1>
-        {/* BLOCK DASHBOARD HEADER CLOSE */}
-        
-        {/* BLOCK PATIENT TABLE OPEN */}
-        <div className="overflow-x-auto">
+        {/* BLOCK HEADER OPEN */}
+        <header className="border-b pb-4">
+          <h1 className="text-3xl font-bold text-blue-800">SmartLab Portal</h1>
+          <p className="text-gray-600">Laboratory Information System | Receptionist View</p>
+        </header>
+        {/* BLOCK HEADER CLOSE */}
+
+        {/* BLOCK PATIENT REGISTRATION FORM OPEN */}
+        <section className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700 underline">New Patient Registration</h2>
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Full Name</label>
+              <input type="text" placeholder="John Doe" className="mt-1 block w-full border rounded-md p-2" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+              <input type="date" className="mt-1 block w-full border rounded-md p-2" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Gender</label>
+              <select className="mt-1 block w-full border rounded-md p-2">
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Referring Physician</label>
+              <input type="text" placeholder="Dr. Smith" className="mt-1 block w-full border rounded-md p-2" />
+            </div>
+            <div className="md:col-span-2">
+              <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+                Register Patient
+              </button>
+            </div>
+          </form>
+        </section>
+        {/* BLOCK PATIENT REGISTRATION FORM CLOSE */}
+
+        {/* BLOCK PATIENT QUEUE OPEN */}
+        <section className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Today's Patient Queue</h2>
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b text-gray-400 text-sm uppercase">
-                <th className="py-4 px-2">Name</th>
-                <th className="py-4">Age/Sex</th>
-                <th className="py-4">Phone</th>
-                <th className="py-4">Status</th>
+              <tr className="bg-gray-100">
+                <th className="p-3 border">Time</th>
+                <th className="p-3 border">Patient Name</th>
+                <th className="p-3 border">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
-              {patients.map(p => (
-                <tr key={p.id} className="hover:bg-blue-50 transition">
-                  <td className="py-4 px-2 font-medium text-gray-800">{p.name}</td>
-                  <td className="py-4 text-gray-600">{p.age}y / {p.gender}</td>
-                  <td className="py-4 text-gray-600 font-mono">{p.phone}</td>
-                  <td className="py-4">
-                    <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                      {p.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+            <tbody>
+              <tr>
+                <td className="p-3 border">09:00 AM</td>
+                <td className="p-3 border">Waiting for data...</td>
+                <td className="p-3 border text-yellow-600 font-medium">Pending</td>
+              </tr>
             </tbody>
           </table>
-        </div>
-        {/* BLOCK PATIENT TABLE CLOSE */}
+        </section>
+        {/* BLOCK PATIENT QUEUE CLOSE */}
 
       </div>
     </main>
   );
 }
-// BLOCK DASHBOARD LOGIC CLOSE
