@@ -1,73 +1,69 @@
-import React from 'react';
+"use client"; // Required for the toggle button to work
 
-export default function Home() {
+import React, { useState } from 'react';
+import { Menu, X, Home, Users, TestTube, FileText, Settings, LogOut } from 'lucide-react';
+
+export default function Dashboard() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <main className="p-8 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto space-y-8">
-        
-        {/* BLOCK HEADER OPEN */}
-        <header className="border-b pb-4">
-          <h1 className="text-3xl font-bold text-blue-800">SmartLab Portal</h1>
-          <p className="text-gray-600">Laboratory Information System | Receptionist View</p>
-        </header>
-        {/* BLOCK HEADER CLOSE */}
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      
+      {/* BLOCK HEADER OPEN */}
+      <header className="h-16 bg-blue-900 text-white flex items-center justify-between px-4 shadow-md sticky top-0 z-50">
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 hover:bg-blue-800 rounded-lg transition"
+          >
+            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+          <h1 className="text-xl font-bold tracking-tight text-white">SMARTLAB <span className="text-blue-400">PORTAL</span></h1>
+        </div>
+        <div className="flex items-center gap-4 text-sm font-medium">
+          <span className="hidden md:inline bg-blue-800 px-3 py-1 rounded-full">Station: Reception_01</span>
+          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white">L</div>
+        </div>
+      </header>
+      {/* BLOCK HEADER CLOSE */}
 
-        {/* BLOCK PATIENT REGISTRATION FORM OPEN */}
-        <section className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700 underline">New Patient Registration</h2>
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Full Name</label>
-              <input type="text" placeholder="John Doe" className="mt-1 block w-full border rounded-md p-2" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
-              <input type="date" className="mt-1 block w-full border rounded-md p-2" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Gender</label>
-              <select className="mt-1 block w-full border rounded-md p-2">
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Referring Physician</label>
-              <input type="text" placeholder="Dr. Smith" className="mt-1 block w-full border rounded-md p-2" />
-            </div>
-            <div className="md:col-span-2">
-              <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
-                Register Patient
-              </button>
-            </div>
-          </form>
-        </section>
-        {/* BLOCK PATIENT REGISTRATION FORM CLOSE */}
+      <div className="flex flex-1">
+        {/* BLOCK SIDEBAR OPEN */}
+        <aside className={`${isSidebarOpen ? 'w-64' : 'w-0 md:w-20'} bg-white border-r border-gray-200 transition-all duration-300 overflow-hidden flex flex-col shadow-lg`}>
+          <nav className="flex-1 py-4">
+            <ul className="space-y-2 px-3">
+              {[
+                { icon: <Home size={20}/>, label: 'Dashboard' },
+                { icon: <Users size={20}/>, label: 'Patients' },
+                { icon: <TestTube size={20}/>, label: 'Lab Tests' },
+                { icon: <FileText size={20}/>, label: 'Reports' },
+                { icon: <Settings size={20}/>, label: 'Settings' },
+              ].map((item, idx) => (
+                <li key={idx} className="flex items-center gap-4 p-3 text-gray-600 hover:bg-blue-50 hover:text-blue-700 rounded-lg cursor-pointer transition">
+                  <span className="min-w-[20px]">{item.icon}</span>
+                  {isSidebarOpen && <span className="font-medium">{item.label}</span>}
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="p-4 border-t border-gray-100 mb-2">
+             <div className="flex items-center gap-4 p-3 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer">
+               <LogOut size={20}/>
+               {isSidebarOpen && <span className="font-medium">Logout</span>}
+             </div>
+          </div>
+        </aside>
+        {/* BLOCK SIDEBAR CLOSE */}
 
-        {/* BLOCK PATIENT QUEUE OPEN */}
-        <section className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Today's Patient Queue</h2>
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="p-3 border">Time</th>
-                <th className="p-3 border">Patient Name</th>
-                <th className="p-3 border">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="p-3 border">09:00 AM</td>
-                <td className="p-3 border">Waiting for data...</td>
-                <td className="p-3 border text-yellow-600 font-medium">Pending</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-        {/* BLOCK PATIENT QUEUE CLOSE */}
+        {/* BLOCK MAIN CONTENT OPEN */}
+        <main className="flex-1 p-6">
+          <div className="border-2 border-dashed border-gray-300 rounded-xl h-full flex items-center justify-center text-gray-400">
+            Main content will be placed here
+          </div>
+        </main>
+        {/* BLOCK MAIN CONTENT CLOSE */}
 
       </div>
-    </main>
+    </div>
   );
 }
