@@ -5,6 +5,8 @@ import { Menu, X, Home, Users, TestTube, FileText, Settings, LogOut, Bell, Searc
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
+  // This new line tracks which page is active
+  const [activeView, setActiveView] = useState('dashboard');
   const colors = {
     purple: "#9575cd",
     cyan: "#4dd0e1",
@@ -80,170 +82,156 @@ export default function Dashboard() {
           <nav className="flex-1 py-4">
             <ul className="space-y-1 px-3">
               
-              {/* Dashboard */}
-              <li className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer bg-white/40 shadow-sm`}
-                  style={{ color: '#9575cd' }}>
+              {/* Dashboard Link */}
+              <li onClick={() => setActiveView('dashboard')}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
+                  style={{ 
+                    backgroundColor: activeView === 'dashboard' ? 'rgba(149, 117, 205, 0.15)' : 'transparent', 
+                    color: activeView === 'dashboard' ? '#9575cd' : '#455a64' 
+                  }}>
                 <Home size={20} />
                 {isSidebarOpen && <span className="font-bold text-sm uppercase">Dashboard</span>}
               </li>
 
-              {/* General Items */}
-              {[
-                { id: 'reg', icon: <Users size={20}/>, label: 'New Registration' },
-                { id: 'entry', icon: <FileText size={20}/>, label: 'Result Entry' },
-                { id: 'list', icon: <Users size={20}/>, label: 'Patient List' },
-              ].map((item) => (
-                <li key={item.id} className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-[#455a64]`}>
-                  <span className="flex-shrink-0">{item.icon}</span>
-                  {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap uppercase tracking-tight">{item.label}</span>}
-                </li>
-              ))}
-
-              {/* Test Dropdown */}
-              <div className="mt-1">
-                <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, test: !prev.test }))}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
-                >
-                  <div className="flex items-center gap-3">
-                    <TestTube size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Test</span>}
-                  </div>
-                  {isSidebarOpen && (openMenus.test ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-                </li>
-                {isSidebarOpen && openMenus.test && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-purple-200">
-                    {['Tests', 'Specimen & Formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
-                      <li key={sub} className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#9575cd] cursor-pointer pl-4 uppercase">{sub}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
-              {/* Setup Dropdown */}
-              <div className="mt-1">
-                <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, setup: !prev.setup }))}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Settings size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Setup</span>}
-                  </div>
-                  {isSidebarOpen && (openMenus.setup ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-                </li>
-                {isSidebarOpen && openMenus.setup && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-cyan-200">
-                    {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
-                      <li key={sub} className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#4dd0e1] cursor-pointer pl-4 uppercase">{sub}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
-              {/* Management Dropdown */}
-              <div className="mt-1">
-                <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, mgmt: !prev.mgmt }))}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Users size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Management</span>}
-                  </div>
-                  {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-                </li>
-                {isSidebarOpen && openMenus.mgmt && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-pink-200">
-                    {['Referral List', 'Manage Users', 'Processing Lab'].map((sub) => (
-                      <li key={sub} className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#f06292] cursor-pointer pl-4 uppercase">{sub}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
-              {/* Profile */}
-              <li className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 mt-1 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-[#455a64] font-semibold text-sm uppercase`}>
-                <FileText size={20} className="flex-shrink-0" />
-                {isSidebarOpen && <span>Lab Profile</span>}
+              {/* New Registration Link */}
+              <li onClick={() => setActiveView('registration')}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
+                  style={{ 
+                    backgroundColor: activeView === 'registration' ? 'rgba(149, 117, 205, 0.15)' : 'transparent', 
+                    color: activeView === 'registration' ? '#9575cd' : '#455a64' 
+                  }}>
+                <Users size={20} />
+                {isSidebarOpen && <span className="font-bold text-sm uppercase">New Registration</span>}
               </li>
 
+              {/* Other menu items... (Keep your existing Result Entry and Patient List here) */}
+              <li className="flex items-center p-2.5 text-[#455a64] opacity-50 cursor-not-allowed">
+                <FileText size={20} />
+                {isSidebarOpen && <span className="ml-3 text-sm font-semibold uppercase">Result Entry</span>}
+              </li>
             </ul>
           </nav>
-
-          <div className="p-4 border-t border-purple-100 bg-white/20">
-             <div className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2 rounded-lg cursor-pointer hover:bg-red-50 text-[#f06292]`}>
-               <LogOut size={20} />
-               {isSidebarOpen && <span className="text-sm font-bold uppercase">Logout</span>}
-             </div>
-          </div>
         </aside>
         {/* BLOCK SIDEBAR CLOSE */}
         {/* BLOCK MAIN CONTENT OPEN */}
-        <main className="flex-1 p-6 overflow-y-auto">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="flex-1 p-6 overflow-y-auto h-full bg-[#eceff1]">
+          <div className="max-w-5xl mx-auto pb-20">
             
-            {/* Welcome Message */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold" style={{ color: '#263238' }}>Good Morning, Dr. John Doe</h2>
-              <p style={{ color: '#607d8b' }}>Here is what's happening in the lab today.</p>
+            {/* Page Header */}
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-[#263238]">Patient Registration</h2>
+                <p className="text-[#607d8b] text-sm">Create a new laboratory file for a patient.</p>
+              </div>
+              <div className="text-right">
+                <span className="text-xs font-bold text-[#9575cd] uppercase tracking-widest">Reg No:</span>
+                <p className="text-lg font-mono font-bold text-[#455a64]">MLP-2026-0001</p>
+              </div>
             </div>
 
-            {/* Status Cards Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Registration Form Container */}
+            <div className="bg-white rounded-2xl shadow-sm border border-white overflow-hidden">
               
-              {/* Card 1: Total Patients */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 transition-transform hover:scale-105" style={{ borderBottomColor: '#9575cd' }}>
-                <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 rounded-xl bg-purple-50" style={{ color: '#9575cd' }}>
-                    <Users size={24} />
-                  </div>
-                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-green-100 text-green-600">+12%</span>
+              {/* Form Section: Personal Information */}
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center gap-2 mb-4 text-[#9575cd]">
+                  <Users size={18} />
+                  <h3 className="font-bold uppercase text-xs tracking-wider">Personal Information</h3>
                 </div>
-                <h3 className="text-sm font-medium" style={{ color: '#607d8b' }}>Total Patients</h3>
-                <p className="text-2xl font-bold" style={{ color: '#263238' }}>1,284</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Full Name <span className="text-[#f06292]">*</span></label>
+                    <input type="text" placeholder="Enter patient's full name" 
+                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none transition-all"
+                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Gender <span className="text-[#f06292]">*</span></label>
+                    <select className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
+                      style={{ borderColor: 'rgba(77,208,225,0.4)' }}>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Age / DOB <span className="text-[#f06292]">*</span></label>
+                    <input type="text" placeholder="e.g. 25Y or 12/05/1998" 
+                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
+                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Mobile Number</label>
+                    <input type="tel" placeholder="+91 00000 00000" 
+                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
+                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Email Address</label>
+                    <input type="email" placeholder="patient@example.com" 
+                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
+                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
+                  </div>
+                </div>
               </div>
 
-              {/* Card 2: Tests Completed (Success Green) */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 transition-transform hover:scale-105" style={{ borderBottomColor: '#81c784' }}>
-                <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 rounded-xl bg-green-50" style={{ color: '#81c784' }}>
-                    <TestTube size={24} />
-                  </div>
-                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-green-100 text-green-600">Stable</span>
+              {/* Form Section: Referral & Clinical */}
+              <div className="p-6 bg-slate-50/50 border-b border-gray-100">
+                <div className="flex items-center gap-2 mb-4 text-[#4dd0e1]">
+                  <Settings size={18} />
+                  <h3 className="font-bold uppercase text-xs tracking-wider">Clinical Details</h3>
                 </div>
-                <h3 className="text-sm font-medium" style={{ color: '#607d8b' }}>Tests Completed</h3>
-                <p className="text-2xl font-bold" style={{ color: '#263238' }}>856</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Referring Doctor</label>
+                    <input type="text" placeholder="Self / Dr. Name" 
+                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
+                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Sample Collection Point</label>
+                    <select className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
+                      style={{ borderColor: 'rgba(77,208,225,0.4)' }}>
+                      <option>Main Lab (In-house)</option>
+                      <option>Home Collection</option>
+                      <option>Referral Center</option>
+                    </select>
+                  </div>
+                </div>
               </div>
 
-              {/* Card 3: Pending Results (Warning Orange) */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 transition-transform hover:scale-105" style={{ borderBottomColor: '#ffb74d' }}>
-                <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 rounded-xl bg-orange-50" style={{ color: '#ffb74d' }}>
-                    <FileText size={24} />
-                  </div>
-                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-orange-100 text-orange-600">Priority</span>
+              {/* Form Section: Test Selection Selection */}
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-4 text-[#9575cd]">
+                  <TestTube size={18} />
+                  <h3 className="font-bold uppercase text-xs tracking-wider">Test Selection</h3>
                 </div>
-                <h3 className="text-sm font-medium" style={{ color: '#607d8b' }}>Pending Results</h3>
-                <p className="text-2xl font-bold" style={{ color: '#263238' }}>42</p>
+                <div className="border rounded-xl p-4 min-h-[100px] flex flex-wrap gap-2 mb-4 bg-gray-50 border-dashed"
+                     style={{ borderColor: 'rgba(149,117,205,0.3)' }}>
+                  <p className="text-xs text-gray-400 italic">Selected tests will appear here...</p>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {['CBC', 'Lipid Profile', 'HbA1c', 'TSH', 'Urine Routine', 'Bilirubin', 'Creatinine', 'Sugar F/PP'].map((test) => (
+                    <button key={test} className="p-2 border rounded-lg text-xs font-bold text-[#455a64] hover:bg-purple-50 transition-all text-left">
+                      + {test}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              {/* Card 4: Urgent Alerts (Pink) */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 transition-transform hover:scale-105" style={{ borderBottomColor: '#f06292' }}>
-                <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 rounded-xl bg-pink-50" style={{ color: '#f06292' }}>
-                    <Bell size={24} />
-                  </div>
-                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-pink-100 text-pink-600">Action</span>
-                </div>
-                <h3 className="text-sm font-medium" style={{ color: '#607d8b' }}>Urgent Alerts</h3>
-                <p className="text-2xl font-bold" style={{ color: '#263238' }}>07</p>
+              {/* Form Actions */}
+              <div className="p-6 bg-gray-50 flex justify-end gap-3">
+                <button className="px-6 py-2.5 rounded-xl text-sm font-bold text-[#607d8b] hover:bg-gray-200 transition-all">
+                  Cancel
+                </button>
+                <button className="px-8 py-2.5 rounded-xl text-sm font-bold text-white shadow-lg transition-all transform hover:scale-105"
+                  style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
+                  Register & Generate Invoice
+                </button>
               </div>
 
             </div>
-
-            {/* Placeholder for future sections */}
-            <div className="bg-white rounded-2xl p-8 border-2 border-dashed border-gray-100 flex items-center justify-center min-h-[300px]">
-              <p style={{ color: '#607d8b' }}>Charts and Detailed Logs will appear here</p>
-            </div>
-
           </div>
         </main>
         {/* BLOCK MAIN CONTENT CLOSE */}
