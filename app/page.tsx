@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { Menu, X, Home, Users, TestTube, FileText, Settings, LogOut, Bell, Search } from 'lucide-react';
 
 export default function Dashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const colors = {
     purple: "#9575cd",
     cyan: "#4dd0e1",
@@ -88,91 +88,109 @@ export default function Dashboard() {
       <div className="flex flex-1 overflow-hidden">
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
-          className={`${isSidebarOpen ? 'w-64' : 'w-0 md:w-20'} transition-all duration-300 flex flex-col shadow-md border-r h-[calc(100vh-64px)] overflow-y-auto bg-white`}
+          className={`${isSidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 flex flex-col shadow-md border-r h-[calc(100vh-64px)] overflow-y-auto bg-white overflow-x-hidden`}
           style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }}
         >
           <nav className="flex-1 py-4">
             <ul className="space-y-1 px-3">
               {/* Primary Links */}
               {[
-                { icon: <Home size={18}/>, label: 'Dashboard', active: true },
-                { icon: <Users size={18}/>, label: 'New Registration' },
-                { icon: <FileText size={18}/>, label: 'Result Entry' },
-                { icon: <Users size={18}/>, label: 'Patient List' },
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50"
+                { id: 'dash', icon: <Home size={20}/>, label: 'Dashboard', active: true },
+                { id: 'reg', icon: <Users size={20}/>, label: 'New Registration' },
+                { id: 'entry', icon: <FileText size={20}/>, label: 'Result Entry' },
+                { id: 'list', icon: <Users size={20}/>, label: 'Patient List' },
+              ].map((item) => (
+                <li key={item.id} className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
                     style={{ color: item.active ? '#9575cd' : '#455a64', backgroundColor: item.active ? 'rgba(149, 117, 205, 0.1)' : '' }}>
-                  <span className="min-w-[18px]">{item.icon}</span>
-                  {isSidebarOpen && <span className="font-semibold text-sm">{item.label}</span>}
+                  <span className="flex-shrink-0">{item.icon}</span>
+                  {isSidebarOpen && <span className="font-semibold text-sm whitespace-nowrap">{item.label}</span>}
                 </li>
               ))}
 
-              {/* Category: Test with Submenu */}
-              {isSidebarOpen && (
-                <div className="mt-4">
-                  <li className="flex items-center gap-3 p-2.5 rounded-lg text-slate-700 font-bold text-sm italic">
-                    <TestTube size={18} className="text-purple-500" />
-                    <span>Test</span>
-                  </li>
-                  <ul className="ml-9 space-y-1 border-l-2 border-purple-200">
+              {/* Collapsible Menu: Test */}
+              <div className="mt-1">
+                <li 
+                  onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, test: !prev.test }))}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-slate-700 font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                >
+                  <div className="flex items-center gap-3">
+                    <TestTube size={20} className="text-purple-500 flex-shrink-0" />
+                    {isSidebarOpen && <span className="whitespace-nowrap">Test</span>}
+                  </div>
+                  {isSidebarOpen && <span className={`transition-transform duration-200 ${openMenus.test ? 'rotate-180' : ''}`}>▼</span>}
+                </li>
+                {isSidebarOpen && openMenus.test && (
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-purple-200 animate-in fade-in slide-in-from-top-1">
                     {['Tests', 'Specimen & Formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-medium text-slate-600 hover:text-purple-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative">
+                      <li key={sub} className="p-2 text-sm font-semibold text-slate-600 hover:text-purple-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-purple-200"></span>
                         {sub}
                       </li>
                     ))}
                   </ul>
-                </div>
-              )}
+                )}
+              </div>
 
-              {/* Category: Setup with Submenu */}
-              {isSidebarOpen && (
-                <div className="mt-4">
-                  <li className="flex items-center gap-3 p-2.5 rounded-lg text-slate-700 font-bold text-sm italic">
-                    <Settings size={18} className="text-cyan-500" />
-                    <span>Setup</span>
-                  </li>
-                  <ul className="ml-9 space-y-1 border-l-2 border-cyan-200">
+              {/* Collapsible Menu: Setup */}
+              <div className="mt-1">
+                <li 
+                  onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, setup: !prev.setup }))}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-slate-700 font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Settings size={20} className="text-cyan-500 flex-shrink-0" />
+                    {isSidebarOpen && <span className="whitespace-nowrap">Setup</span>}
+                  </div>
+                  {isSidebarOpen && <span className={`transition-transform duration-200 ${openMenus.setup ? 'rotate-180' : ''}`}>▼</span>}
+                </li>
+                {isSidebarOpen && openMenus.setup && (
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-cyan-200 animate-in fade-in slide-in-from-top-1">
                     {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-medium text-slate-600 hover:text-cyan-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative">
+                      <li key={sub} className="p-2 text-sm font-semibold text-slate-600 hover:text-cyan-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-cyan-200"></span>
                         {sub}
                       </li>
                     ))}
                   </ul>
-                </div>
-              )}
+                )}
+              </div>
 
-              {/* Category: Lab Management with Submenu */}
-              {isSidebarOpen && (
-                <div className="mt-4">
-                  <li className="flex items-center gap-3 p-2.5 rounded-lg text-slate-700 font-bold text-sm italic">
-                    <Users size={18} className="text-pink-500" />
-                    <span>Lab Management</span>
-                  </li>
-                  <ul className="ml-9 space-y-1 border-l-2 border-pink-200">
+              {/* Collapsible Menu: Lab Management */}
+              <div className="mt-1">
+                <li 
+                  onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, mgmt: !prev.mgmt }))}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-slate-700 font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Users size={20} className="text-pink-500 flex-shrink-0" />
+                    {isSidebarOpen && <span className="whitespace-nowrap">Lab Management</span>}
+                  </div>
+                  {isSidebarOpen && <span className={`transition-transform duration-200 ${openMenus.mgmt ? 'rotate-180' : ''}`}>▼</span>}
+                </li>
+                {isSidebarOpen && openMenus.mgmt && (
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-pink-200 animate-in fade-in slide-in-from-top-1">
                     {['Referral List', 'Manage Users', 'Processing Lab'].map((sub) => (
-                      <li key={sub} className="p-2 text-xs font-medium text-slate-600 hover:text-pink-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative">
+                      <li key={sub} className="p-2 text-sm font-semibold text-slate-600 hover:text-pink-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative whitespace-nowrap">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-pink-200"></span>
                         {sub}
                       </li>
                     ))}
                   </ul>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Lab Profile */}
-              <li className="flex items-center gap-3 p-2.5 mt-4 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-slate-600">
-                <FileText size={18} className="text-blue-500" />
-                {isSidebarOpen && <span className="font-semibold text-sm">Lab Profile</span>}
+              <li className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 mt-1 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-slate-700 font-semibold text-sm`}>
+                <FileText size={20} className="text-blue-500 flex-shrink-0" />
+                {isSidebarOpen && <span className="whitespace-nowrap">Lab Profile</span>}
               </li>
             </ul>
           </nav>
 
           <div className="p-4 border-t border-purple-100 mt-auto bg-white/20">
-             <div className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-red-50 text-red-400">
-               <LogOut size={18}/>
-               {isSidebarOpen && <span className="text-sm font-bold">Logout</span>}
+             <div className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2 rounded-lg cursor-pointer hover:bg-red-50 text-red-400`}>
+               <LogOut size={20} className="flex-shrink-0" />
+               {isSidebarOpen && <span className="text-sm font-bold whitespace-nowrap">Logout</span>}
              </div>
           </div>
         </aside>
