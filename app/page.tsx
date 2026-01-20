@@ -41,10 +41,10 @@ export default function Dashboard() {
         </div>
 
         {/* Center: Search Bar */}
-        <div className="flex-1 max-w-md relative">
+        <div className="flex-1 max-w-xs relative">
           <input 
             type="text" 
-            placeholder="Search patients, tests, reports..." 
+            placeholder="Search..." 
             className="w-full py-1.5 px-4 pr-10 rounded-full border bg-white/80 text-sm focus:outline-none focus:ring-2 transition"
             style={{ borderColor: 'rgba(77,208,225,0.4)', color: '#455a64' }} 
           />
@@ -52,7 +52,6 @@ export default function Dashboard() {
             <Search size={16} style={{ color: '#9575cd' }} />
           </span>
         </div>
-
         {/* Right Side: Lab Name & User Profile */}
         <div className="flex items-center gap-6 min-w-fit">
           <div className="hidden lg:flex items-center gap-2 text-slate-700">
@@ -89,41 +88,80 @@ export default function Dashboard() {
       <div className="flex flex-1 overflow-hidden">
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
-          className={`${isSidebarOpen ? 'w-64' : 'w-0 md:w-20'} transition-all duration-300 overflow-hidden flex flex-col shadow-md border-r`}
-          style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }} // MediLab Sidebar Gradient
+          className={`${isSidebarOpen ? 'w-64' : 'w-0 md:w-20'} transition-all duration-300 flex flex-col shadow-md border-r h-[calc(100vh-64px)] overflow-y-auto custom-scrollbar`}
+          style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }}
         >
-          <nav className="flex-1 py-6">
-            <ul className="space-y-3 px-3">
+          <nav className="flex-1 py-4">
+            <ul className="space-y-1 px-3">
+              {/* Primary Links */}
               {[
-                { icon: <Home size={20}/>, label: 'Dashboard', active: true },
-                { icon: <Users size={20}/>, label: 'Patients' },
-                { icon: <TestTube size={20}/>, label: 'Lab Tests' },
-                { icon: <FileText size={20}/>, label: 'Reports' },
-                { icon: <Settings size={20}/>, label: 'Settings' },
+                { icon: <Home size={18}/>, label: 'Dashboard', active: true },
+                { icon: <Users size={18}/>, label: 'New Registration' },
+                { icon: <FileText size={18}/>, label: 'Result Entry' },
+                { icon: <Users size={18}/>, label: 'Patient List' },
               ].map((item, idx) => (
-                <li key={idx} 
-                    className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-all ${item.active ? 'shadow-sm' : ''}`}
-                    style={{ 
-                      backgroundColor: item.active ? 'rgba(149, 117, 205, 0.15)' : 'transparent',
-                      color: item.active ? colors.purple : colors.mediumText
-                    }}>
-                  <span className="min-w-[20px]">{item.icon}</span>
-                  {isSidebarOpen && <span className="font-semibold">{item.label}</span>}
+                <li key={idx} className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50"
+                    style={{ color: item.active ? '#9575cd' : '#455a64', backgroundColor: item.active ? 'rgba(149, 117, 205, 0.1)' : '' }}>
+                  <span className="min-w-[18px]">{item.icon}</span>
+                  {isSidebarOpen && <span className="font-semibold text-sm">{item.label}</span>}
+                </li>
+              ))}
+
+              {/* Category: Test Setup */}
+              {isSidebarOpen && <li className="pt-4 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Test Setup</li>}
+              {[
+                { label: 'Tests' },
+                { label: 'Specimen & Formats' },
+                { label: 'Parameters' },
+                { label: 'Templates' },
+                { label: 'Packages' },
+              ].map((item, idx) => (
+                <li key={idx} className="flex items-center gap-3 p-2 px-4 rounded-lg cursor-pointer hover:bg-white/50 text-slate-600">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-300"></span>
+                  {isSidebarOpen && <span className="text-sm">{item.label}</span>}
+                </li>
+              ))}
+
+              {/* Category: General Setup */}
+              {isSidebarOpen && <li className="pt-4 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">General Setup</li>}
+              {[
+                { label: 'Reports' },
+                { label: 'UOM' },
+                { label: 'Multivalues' },
+                { label: 'Vacutainer' },
+                { label: 'Doctors' },
+                { label: 'Department' },
+              ].map((item, idx) => (
+                <li key={idx} className="flex items-center gap-3 p-2 px-4 rounded-lg cursor-pointer hover:bg-white/50 text-slate-600">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-300"></span>
+                  {isSidebarOpen && <span className="text-sm">{item.label}</span>}
+                </li>
+              ))}
+
+              {/* Category: Management */}
+              {isSidebarOpen && <li className="pt-4 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Management</li>}
+              {[
+                { label: 'Referral List' },
+                { label: 'Manage Users' },
+                { label: 'Processing Lab' },
+                { label: 'Lab Profile' },
+              ].map((item, idx) => (
+                <li key={idx} className="flex items-center gap-3 p-2 px-4 rounded-lg cursor-pointer hover:bg-white/50 text-slate-600">
+                  <span className="w-1.5 h-1.5 rounded-full bg-pink-300"></span>
+                  {isSidebarOpen && <span className="text-sm">{item.label}</span>}
                 </li>
               ))}
             </ul>
           </nav>
 
-          <div className="p-4 border-t border-purple-100 mb-2">
-             <div className="flex items-center gap-4 p-3 rounded-lg cursor-pointer transition hover:bg-red-50"
-                  style={{ color: colors.pink }}>
-               <LogOut size={20}/>
-               {isSidebarOpen && <span className="font-semibold">Logout</span>}
+          <div className="p-4 border-t border-purple-100 mt-auto">
+             <div className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-red-50 text-red-400">
+               <LogOut size={18}/>
+               {isSidebarOpen && <span className="text-sm font-bold">Logout</span>}
              </div>
           </div>
         </aside>
         {/* BLOCK SIDEBAR CLOSE */}
-
         {/* BLOCK MAIN CONTENT OPEN */}
         <main className="flex-1 p-6 overflow-y-auto">
           <div className="max-w-7xl mx-auto space-y-6">
