@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Menu, X, Home, Users, TestTube, FileText, Settings, LogOut, Bell } from 'lucide-react';
+import { Menu, X, Home, Users, TestTube, FileText, Settings, LogOut, Bell, Search } from 'lucide-react';
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,37 +22,69 @@ export default function Dashboard() {
       
       {/* BLOCK HEADER OPEN */}
       <header 
-        className="h-16 flex items-center justify-between px-4 shadow-sm border-b sticky top-0 z-50"
-        style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }} // MediLab Header Gradient
+        className="h-16 flex items-center justify-between px-6 shadow-sm border-b sticky top-0 z-50 gap-4"
+        style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }} // Gradient from Page 1 of PDF [cite: 18]
       >
-        <div className="flex items-center gap-4">
+        {/* Left Side: Menu & Logo */}
+        <div className="flex items-center gap-4 min-w-fit">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 rounded-lg transition hover:bg-white/20"
-            style={{ color: colors.purple }}
+            className="p-2 rounded-lg bg-blue-200/30 transition hover:bg-white/40"
+            style={{ color: '#9575cd' }} // Purple Icon [cite: 20]
           >
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+            <Menu size={20} />
           </button>
-          <h1 className="text-xl font-bold tracking-tight" style={{ color: colors.darkText }}>
-            SMARTLAB <span style={{ color: colors.purple }}>PORTAL</span>
-          </h1>
+          <div className="flex items-center gap-2">
+            <TestTube size={24} style={{ color: '#9575cd' }} /> {/* Logo Icon [cite: 19] */}
+            <h1 className="text-lg font-bold" style={{ color: '#f06292' }}>MediLab Pro</h1> {/* Pink Logo Text [cite: 19] */}
+          </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          {/* Notification Badge */}
-          <div className="relative p-2 rounded-full bg-white/50" style={{ color: colors.purple }}>
-            <Bell size={20} />
-            <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full border border-white" 
-                  style={{ background: 'linear-gradient(to bottom, #f06292, #d81b60)' }}></span>
+        {/* Center: Search Bar */}
+        <div className="flex-1 max-w-xl relative">
+          <input 
+            type="text" 
+            placeholder="Search patients, tests, reports..." 
+            className="w-full py-2 px-4 pr-10 rounded-full border bg-white/80 focus:outline-none focus:ring-2 transition"
+            style={{ borderColor: 'rgba(77,208,225,0.4)', color: '#455a64' }} // Light Cyan Border [cite: 30]
+          />
+          <span className="absolute right-4 top-2.5 text-purple-400">
+            <Search size={18} style={{ color: '#9575cd' }} />
+          </span>
+        </div>
+
+        {/* Right Side: Lab Name & User Profile */}
+        <div className="flex items-center gap-6 min-w-fit">
+          <div className="hidden lg:flex items-center gap-2 text-slate-700">
+             <div className="p-1.5 bg-slate-200/50 rounded shadow-inner">🏥</div>
+             <span className="font-semibold text-sm">Metropolitan Diagnostic Center</span>
           </div>
-          {/* User Avatar */}
-          <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm"
-               style={{ background: 'linear-gradient(to bottom right, #9575cd, #f06292)' }}>
-            AD
+
+          <div className="flex items-center gap-3">
+            {/* Notification Icons with Badges */}
+            <div className="relative p-2 rounded-lg bg-purple-200/30" style={{ color: '#9575cd' }}>
+              <Bell size={20} />
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white font-bold"
+                    style={{ background: 'linear-gradient(to bottom, #f06292, #d81b60)' }}>3</span> {/* Pink Badge [cite: 38] */}
+            </div>
+            
+            <button className="p-2 rounded-lg bg-purple-200/30 text-slate-600">
+              <Settings size={20} style={{ color: '#455a64' }} />
+            </button>
+
+            {/* User Profile Capsule */}
+            <div className="flex items-center gap-2 bg-white/90 rounded-full pl-1 pr-3 py-1 shadow-sm border border-white">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm"
+                   style={{ background: 'linear-gradient(to bottom right, #9575cd, #f06292)' }}> {/* Avatar Gradient [cite: 39] */}
+                JD
+              </div>
+              <span className="text-sm font-medium text-slate-700">Dr. John Doe</span>
+              <Settings size={14} className="text-slate-400" />
+            </div>
           </div>
         </div>
       </header>
-      {/* BLOCK HEADER CLOSE */}
+      {/* BLOCK HEADER CLOSE  */}
 
       <div className="flex flex-1 overflow-hidden">
         {/* BLOCK SIDEBAR OPEN */}
