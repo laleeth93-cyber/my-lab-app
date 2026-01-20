@@ -88,7 +88,7 @@ export default function Dashboard() {
       <div className="flex flex-1 overflow-hidden">
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
-          className={`${isSidebarOpen ? 'w-64' : 'w-0 md:w-20'} transition-all duration-300 flex flex-col shadow-md border-r h-[calc(100vh-64px)] overflow-y-auto custom-scrollbar`}
+          className={`${isSidebarOpen ? 'w-64' : 'w-0 md:w-20'} transition-all duration-300 flex flex-col shadow-md border-r h-[calc(100vh-64px)] overflow-y-auto bg-white`}
           style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }}
         >
           <nav className="flex-1 py-4">
@@ -107,54 +107,69 @@ export default function Dashboard() {
                 </li>
               ))}
 
-              {/* Category: Test Setup */}
-              {isSidebarOpen && <li className="pt-4 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Test Setup</li>}
-              {[
-                { label: 'Tests' },
-                { label: 'Specimen & Formats' },
-                { label: 'Parameters' },
-                { label: 'Templates' },
-                { label: 'Packages' },
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-3 p-2 px-4 rounded-lg cursor-pointer hover:bg-white/50 text-slate-600">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-300"></span>
-                  {isSidebarOpen && <span className="text-sm">{item.label}</span>}
-                </li>
-              ))}
+              {/* Category: Test with Submenu */}
+              {isSidebarOpen && (
+                <div className="mt-4">
+                  <li className="flex items-center gap-3 p-2.5 rounded-lg text-slate-700 font-bold text-sm italic">
+                    <TestTube size={18} className="text-purple-500" />
+                    <span>Test</span>
+                  </li>
+                  <ul className="ml-9 space-y-1 border-l-2 border-purple-200">
+                    {['Tests', 'Specimen & Formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
+                      <li key={sub} className="p-2 text-xs font-medium text-slate-600 hover:text-purple-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative">
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-purple-200"></span>
+                        {sub}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              {/* Category: General Setup */}
-              {isSidebarOpen && <li className="pt-4 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">General Setup</li>}
-              {[
-                { label: 'Reports' },
-                { label: 'UOM' },
-                { label: 'Multivalues' },
-                { label: 'Vacutainer' },
-                { label: 'Doctors' },
-                { label: 'Department' },
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-3 p-2 px-4 rounded-lg cursor-pointer hover:bg-white/50 text-slate-600">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-300"></span>
-                  {isSidebarOpen && <span className="text-sm">{item.label}</span>}
-                </li>
-              ))}
+              {/* Category: Setup with Submenu */}
+              {isSidebarOpen && (
+                <div className="mt-4">
+                  <li className="flex items-center gap-3 p-2.5 rounded-lg text-slate-700 font-bold text-sm italic">
+                    <Settings size={18} className="text-cyan-500" />
+                    <span>Setup</span>
+                  </li>
+                  <ul className="ml-9 space-y-1 border-l-2 border-cyan-200">
+                    {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
+                      <li key={sub} className="p-2 text-xs font-medium text-slate-600 hover:text-cyan-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative">
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-cyan-200"></span>
+                        {sub}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-              {/* Category: Management */}
-              {isSidebarOpen && <li className="pt-4 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">Management</li>}
-              {[
-                { label: 'Referral List' },
-                { label: 'Manage Users' },
-                { label: 'Processing Lab' },
-                { label: 'Lab Profile' },
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-3 p-2 px-4 rounded-lg cursor-pointer hover:bg-white/50 text-slate-600">
-                  <span className="w-1.5 h-1.5 rounded-full bg-pink-300"></span>
-                  {isSidebarOpen && <span className="text-sm">{item.label}</span>}
-                </li>
-              ))}
+              {/* Category: Lab Management with Submenu */}
+              {isSidebarOpen && (
+                <div className="mt-4">
+                  <li className="flex items-center gap-3 p-2.5 rounded-lg text-slate-700 font-bold text-sm italic">
+                    <Users size={18} className="text-pink-500" />
+                    <span>Lab Management</span>
+                  </li>
+                  <ul className="ml-9 space-y-1 border-l-2 border-pink-200">
+                    {['Referral List', 'Manage Users', 'Processing Lab'].map((sub) => (
+                      <li key={sub} className="p-2 text-xs font-medium text-slate-600 hover:text-pink-600 hover:bg-white/40 rounded-r-lg cursor-pointer transition-colors pl-4 relative">
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-[2px] bg-pink-200"></span>
+                        {sub}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Lab Profile */}
+              <li className="flex items-center gap-3 p-2.5 mt-4 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-slate-600">
+                <FileText size={18} className="text-blue-500" />
+                {isSidebarOpen && <span className="font-semibold text-sm">Lab Profile</span>}
+              </li>
             </ul>
           </nav>
 
-          <div className="p-4 border-t border-purple-100 mt-auto">
+          <div className="p-4 border-t border-purple-100 mt-auto bg-white/20">
              <div className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-red-50 text-red-400">
                <LogOut size={18}/>
                {isSidebarOpen && <span className="text-sm font-bold">Logout</span>}
