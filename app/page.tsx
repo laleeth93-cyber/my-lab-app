@@ -82,156 +82,148 @@ export default function Dashboard() {
           <nav className="flex-1 py-4">
             <ul className="space-y-1 px-3">
               
-              {/* Dashboard Link */}
-              <li onClick={() => setActiveView('dashboard')}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
+              {/* Primary Links */}
+              {[
+                { id: 'dashboard', icon: <Home size={20}/>, label: 'Dashboard' },
+                { id: 'registration', icon: <Users size={20}/>, label: 'New Registration' },
+                { id: 'entry', icon: <FileText size={20}/>, label: 'Result Entry' },
+                { id: 'list', icon: <Users size={20}/>, label: 'Patient List' },
+              ].map((item) => (
+                <li key={item.id} onClick={() => setActiveView(item.id)}
+                    className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
+                    style={{ 
+                      backgroundColor: activeView === item.id ? 'rgba(149, 117, 205, 0.15)' : 'transparent', 
+                      color: activeView === item.id ? '#9575cd' : '#455a64' 
+                    }}>
+                  <span className="flex-shrink-0">{item.icon}</span>
+                  {isSidebarOpen && <span className="font-bold text-sm uppercase tracking-tight">{item.label}</span>}
+                </li>
+              ))}
+
+              {/* Dropdown: Test */}
+              <div className="mt-1">
+                <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, test: !prev.test }))}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                >
+                  <div className="flex items-center gap-3">
+                    <TestTube size={20} className="flex-shrink-0" />
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Test</span>}
+                  </div>
+                  {isSidebarOpen && (openMenus.test ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </li>
+                {isSidebarOpen && openMenus.test && (
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-purple-200">
+                    {['Tests', 'Specimen & Formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
+                      <li key={sub} onClick={() => setActiveView(sub.toLowerCase().replace(/ /g, '_'))}
+                          className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#9575cd] cursor-pointer pl-4 uppercase">{sub}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              {/* Dropdown: Setup */}
+              <div className="mt-1">
+                <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, setup: !prev.setup }))}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Settings size={20} className="flex-shrink-0" />
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Setup</span>}
+                  </div>
+                  {isSidebarOpen && (openMenus.setup ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </li>
+                {isSidebarOpen && openMenus.setup && (
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-cyan-200">
+                    {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
+                      <li key={sub} onClick={() => setActiveView(sub.toLowerCase())}
+                          className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#4dd0e1] cursor-pointer pl-4 uppercase">{sub}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              {/* Dropdown: Management */}
+              <div className="mt-1">
+                <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, mgmt: !prev.mgmt }))}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Users size={20} className="flex-shrink-0" />
+                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Lab Management</span>}
+                  </div>
+                  {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </li>
+                {isSidebarOpen && openMenus.mgmt && (
+                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-pink-200">
+                    {['Referral List', 'Manage Users', 'Processing Lab'].map((sub) => (
+                      <li key={sub} onClick={() => setActiveView(sub.toLowerCase().replace(/ /g, '_'))}
+                          className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#f06292] cursor-pointer pl-4 uppercase">{sub}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              {/* Lab Profile */}
+              <li onClick={() => setActiveView('profile')}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 mt-1 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-[#455a64]`}
                   style={{ 
-                    backgroundColor: activeView === 'dashboard' ? 'rgba(149, 117, 205, 0.15)' : 'transparent', 
-                    color: activeView === 'dashboard' ? '#9575cd' : '#455a64' 
+                    backgroundColor: activeView === 'profile' ? 'rgba(149, 117, 205, 0.15)' : 'transparent', 
+                    color: activeView === 'profile' ? '#9575cd' : '#455a64' 
                   }}>
-                <Home size={20} />
-                {isSidebarOpen && <span className="font-bold text-sm uppercase">Dashboard</span>}
+                <FileText size={20} className="flex-shrink-0" />
+                {isSidebarOpen && <span className="font-bold text-sm uppercase tracking-tight">Lab Profile</span>}
               </li>
 
-              {/* New Registration Link */}
-              <li onClick={() => setActiveView('registration')}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
-                  style={{ 
-                    backgroundColor: activeView === 'registration' ? 'rgba(149, 117, 205, 0.15)' : 'transparent', 
-                    color: activeView === 'registration' ? '#9575cd' : '#455a64' 
-                  }}>
-                <Users size={20} />
-                {isSidebarOpen && <span className="font-bold text-sm uppercase">New Registration</span>}
-              </li>
-
-              {/* Other menu items... (Keep your existing Result Entry and Patient List here) */}
-              <li className="flex items-center p-2.5 text-[#455a64] opacity-50 cursor-not-allowed">
-                <FileText size={20} />
-                {isSidebarOpen && <span className="ml-3 text-sm font-semibold uppercase">Result Entry</span>}
-              </li>
             </ul>
           </nav>
+
+          <div className="p-4 border-t border-purple-100 bg-white/20">
+             <div className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2 rounded-lg cursor-pointer hover:bg-red-50 text-[#f06292]`}>
+               <LogOut size={20} />
+               {isSidebarOpen && <span className="text-sm font-bold uppercase">Logout</span>}
+             </div>
+          </div>
         </aside>
         {/* BLOCK SIDEBAR CLOSE */}
         {/* BLOCK MAIN CONTENT OPEN */}
         <main className="flex-1 p-6 overflow-y-auto h-full bg-[#eceff1]">
-          <div className="max-w-5xl mx-auto pb-20">
+          <div className="max-w-7xl mx-auto pb-20">
             
-            {/* Page Header */}
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-[#263238]">Patient Registration</h2>
-                <p className="text-[#607d8b] text-sm">Create a new laboratory file for a patient.</p>
+            {/* VIEW 1: DASHBOARD */}
+            {activeView === 'dashboard' && (
+              <div className="animate-in fade-in duration-500">
+                <h2 className="text-2xl font-bold text-[#263238] mb-6">Dashboard Overview</h2>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                   <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-[#9575cd] h-32 flex flex-col justify-center">
+                      <p className="text-xs font-bold text-[#607d8b] uppercase">Today's Patients</p>
+                      <p className="text-2xl font-bold text-[#263238]">24</p>
+                   </div>
+                   {/* Card placeholders... */}
+                </div>
               </div>
-              <div className="text-right">
-                <span className="text-xs font-bold text-[#9575cd] uppercase tracking-widest">Reg No:</span>
-                <p className="text-lg font-mono font-bold text-[#455a64]">MLP-2026-0001</p>
-              </div>
-            </div>
+            )}
 
-            {/* Registration Form Container */}
-            <div className="bg-white rounded-2xl shadow-sm border border-white overflow-hidden">
-              
-              {/* Form Section: Personal Information */}
-              <div className="p-6 border-b border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-[#9575cd]">
-                  <Users size={18} />
-                  <h3 className="font-bold uppercase text-xs tracking-wider">Personal Information</h3>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="md:col-span-2">
-                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Full Name <span className="text-[#f06292]">*</span></label>
-                    <input type="text" placeholder="Enter patient's full name" 
-                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none transition-all"
-                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Gender <span className="text-[#f06292]">*</span></label>
-                    <select className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
-                      style={{ borderColor: 'rgba(77,208,225,0.4)' }}>
-                      <option>Male</option>
-                      <option>Female</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Age / DOB <span className="text-[#f06292]">*</span></label>
-                    <input type="text" placeholder="e.g. 25Y or 12/05/1998" 
-                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
-                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Mobile Number</label>
-                    <input type="tel" placeholder="+91 00000 00000" 
-                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
-                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Email Address</label>
-                    <input type="email" placeholder="patient@example.com" 
-                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
-                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
-                  </div>
+            {/* VIEW 2: REGISTRATION FORM */}
+            {activeView === 'registration' && (
+              <div className="animate-in slide-in-from-bottom-4 duration-500">
+                 {/* PAGE 1 CONTENT FOR REGISTRATION GOES HERE (Full Form Code) */}
+                 <h2 className="text-2xl font-bold text-[#263238] mb-6">Patient Registration Form</h2>
+                 <div className="bg-white rounded-2xl shadow-sm border p-8">
+                    <p className="text-slate-500 italic">Form is ready for input...</p>
+                 </div>
+              </div>
+            )}
+
+            {/* VIEW 3: CATCH-ALL FOR OTHER PAGES */}
+            {!['dashboard', 'registration'].includes(activeView) && (
+              <div className="flex flex-col items-center justify-center h-full text-center">
+                <div className="p-6 bg-white rounded-3xl shadow-lg border border-purple-100">
+                   <h2 className="text-xl font-bold text-[#9575cd] uppercase mb-2">{activeView.replace(/_/g, ' ')}</h2>
+                   <p className="text-slate-400">This module is currently under development.</p>
                 </div>
               </div>
+            )}
 
-              {/* Form Section: Referral & Clinical */}
-              <div className="p-6 bg-slate-50/50 border-b border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-[#4dd0e1]">
-                  <Settings size={18} />
-                  <h3 className="font-bold uppercase text-xs tracking-wider">Clinical Details</h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Referring Doctor</label>
-                    <input type="text" placeholder="Self / Dr. Name" 
-                      className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
-                      style={{ borderColor: 'rgba(77,208,225,0.4)' }} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-[#607d8b] mb-1 uppercase">Sample Collection Point</label>
-                    <select className="w-full p-2.5 rounded-lg border text-sm focus:ring-2 outline-none"
-                      style={{ borderColor: 'rgba(77,208,225,0.4)' }}>
-                      <option>Main Lab (In-house)</option>
-                      <option>Home Collection</option>
-                      <option>Referral Center</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form Section: Test Selection Selection */}
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-4 text-[#9575cd]">
-                  <TestTube size={18} />
-                  <h3 className="font-bold uppercase text-xs tracking-wider">Test Selection</h3>
-                </div>
-                <div className="border rounded-xl p-4 min-h-[100px] flex flex-wrap gap-2 mb-4 bg-gray-50 border-dashed"
-                     style={{ borderColor: 'rgba(149,117,205,0.3)' }}>
-                  <p className="text-xs text-gray-400 italic">Selected tests will appear here...</p>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {['CBC', 'Lipid Profile', 'HbA1c', 'TSH', 'Urine Routine', 'Bilirubin', 'Creatinine', 'Sugar F/PP'].map((test) => (
-                    <button key={test} className="p-2 border rounded-lg text-xs font-bold text-[#455a64] hover:bg-purple-50 transition-all text-left">
-                      + {test}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Form Actions */}
-              <div className="p-6 bg-gray-50 flex justify-end gap-3">
-                <button className="px-6 py-2.5 rounded-xl text-sm font-bold text-[#607d8b] hover:bg-gray-200 transition-all">
-                  Cancel
-                </button>
-                <button className="px-8 py-2.5 rounded-xl text-sm font-bold text-white shadow-lg transition-all transform hover:scale-105"
-                  style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
-                  Register & Generate Invoice
-                </button>
-              </div>
-
-            </div>
           </div>
         </main>
         {/* BLOCK MAIN CONTENT CLOSE */}
