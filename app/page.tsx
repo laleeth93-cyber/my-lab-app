@@ -94,13 +94,75 @@ export default function Dashboard() {
 
         {/* BLOCK MAIN CONTENT OPEN */}
         <main className="flex-1 p-6 overflow-y-auto">
-          <div className="bg-white rounded-xl h-full shadow-sm flex items-center justify-center border"
-               style={{ borderColor: 'rgba(77,208,225,0.3)', color: colors.lightText }}>
-            Welcome to MediLab Pro Dashboard
+          <div className="max-w-7xl mx-auto space-y-6">
+            
+            {/* Welcome Message */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold" style={{ color: '#263238' }}>Good Morning, Dr. John Doe</h2>
+              <p style={{ color: '#607d8b' }}>Here is what's happening in the lab today.</p>
+            </div>
+
+            {/* Status Cards Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              
+              {/* Card 1: Total Patients */}
+              <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 transition-transform hover:scale-105" style={{ borderBottomColor: '#9575cd' }}>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 rounded-xl bg-purple-50" style={{ color: '#9575cd' }}>
+                    <Users size={24} />
+                  </div>
+                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-green-100 text-green-600">+12%</span>
+                </div>
+                <h3 className="text-sm font-medium" style={{ color: '#607d8b' }}>Total Patients</h3>
+                <p className="text-2xl font-bold" style={{ color: '#263238' }}>1,284</p>
+              </div>
+
+              {/* Card 2: Tests Completed (Success Green) */}
+              <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 transition-transform hover:scale-105" style={{ borderBottomColor: '#81c784' }}>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 rounded-xl bg-green-50" style={{ color: '#81c784' }}>
+                    <TestTube size={24} />
+                  </div>
+                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-green-100 text-green-600">Stable</span>
+                </div>
+                <h3 className="text-sm font-medium" style={{ color: '#607d8b' }}>Tests Completed</h3>
+                <p className="text-2xl font-bold" style={{ color: '#263238' }}>856</p>
+              </div>
+
+              {/* Card 3: Pending Results (Warning Orange) */}
+              <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 transition-transform hover:scale-105" style={{ borderBottomColor: '#ffb74d' }}>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 rounded-xl bg-orange-50" style={{ color: '#ffb74d' }}>
+                    <FileText size={24} />
+                  </div>
+                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-orange-100 text-orange-600">Priority</span>
+                </div>
+                <h3 className="text-sm font-medium" style={{ color: '#607d8b' }}>Pending Results</h3>
+                <p className="text-2xl font-bold" style={{ color: '#263238' }}>42</p>
+              </div>
+
+              {/* Card 4: Urgent Alerts (Pink) */}
+              <div className="bg-white p-6 rounded-2xl shadow-sm border-b-4 transition-transform hover:scale-105" style={{ borderBottomColor: '#f06292' }}>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 rounded-xl bg-pink-50" style={{ color: '#f06292' }}>
+                    <Bell size={24} />
+                  </div>
+                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-pink-100 text-pink-600">Action</span>
+                </div>
+                <h3 className="text-sm font-medium" style={{ color: '#607d8b' }}>Urgent Alerts</h3>
+                <p className="text-2xl font-bold" style={{ color: '#263238' }}>07</p>
+              </div>
+
+            </div>
+
+            {/* Placeholder for future sections */}
+            <div className="bg-white rounded-2xl p-8 border-2 border-dashed border-gray-100 flex items-center justify-center min-h-[300px]">
+              <p style={{ color: '#607d8b' }}>Charts and Detailed Logs will appear here</p>
+            </div>
+
           </div>
         </main>
         {/* BLOCK MAIN CONTENT CLOSE */}
-
       </div>
     </div>
   );
