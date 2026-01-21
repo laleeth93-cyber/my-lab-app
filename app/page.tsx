@@ -1,5 +1,6 @@
 "use client";
 
+// BLOCK IMPORTS OPEN
 import React, { useState } from 'react';
 import { 
   Menu, 
@@ -21,7 +22,11 @@ import {
   Settings,
   TestTube
 } from 'lucide-react';
+// BLOCK IMPORTS CLOSE
+
 export default function Dashboard() {
+  
+  // BLOCK STATE SETUP OPEN
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   // This new line tracks which page is active
@@ -36,6 +41,7 @@ export default function Dashboard() {
     mediumText: "#455a64",
     lightText: "#607d8b" // Added this to fix the error
   };
+  // BLOCK STATE SETUP CLOSE
 
   return (
     <div className="h-screen w-full flex flex-col overflow-hidden bg-[#eceff1]">
@@ -92,7 +98,7 @@ export default function Dashboard() {
                 onDragEnd={(e) => {
                   // Logout trigger: if dragged significantly to the right
                   if (e.clientX > 1200) { 
-                     window.location.reload();
+                      window.location.reload();
                   }
                 }}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs cursor-grab active:cursor-grabbing z-20 shadow-sm transition-transform group-hover:scale-105"
@@ -118,6 +124,7 @@ export default function Dashboard() {
 
       <div className="flex flex-1 overflow-hidden"> 
       {/* This 'flex-1 overflow-hidden' is the key to fixing the sidebar */}
+        
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
           className={`${isSidebarOpen ? 'w-56' : 'w-16'} transition-all duration-300 flex flex-col shadow-md border-r bg-white h-full overflow-y-auto shrink-0 z-40`}
@@ -205,11 +212,12 @@ export default function Dashboard() {
           </nav>
         </aside>
         {/* BLOCK SIDEBAR CLOSE */}
+
         {/* BLOCK MAIN CONTENT OPEN */}
         <main className="flex-1 p-6 overflow-y-auto h-full bg-[#eceff1]">
           <div className="max-w-7xl mx-auto pb-20">
             
-            {/* VIEW 1: DASHBOARD */}
+            {/* BLOCK DASHBOARD VIEW OPEN */}
             {activeView === 'dashboard' && (
               <div className="animate-in fade-in duration-500">
                 <h2 className="text-2xl font-bold text-[#263238] mb-6">Dashboard Overview</h2>
@@ -222,8 +230,9 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
+            {/* BLOCK DASHBOARD VIEW CLOSE */}
 
-            {/* VIEW 2: REGISTRATION PAGE */}
+            {/* BLOCK REGISTRATION VIEW OPEN */}
             {activeView === 'registration' && (
               <div className="animate-in slide-in-from-bottom-2 duration-500 h-full">
                 
@@ -279,7 +288,9 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
-            {/* VIEW 3: CATCH-ALL FOR OTHER PAGES */}
+            {/* BLOCK REGISTRATION VIEW CLOSE */}
+
+            {/* BLOCK CATCH ALL VIEW OPEN */}
             {!['dashboard', 'registration'].includes(activeView) && (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <div className="p-6 bg-white rounded-3xl shadow-lg border border-purple-100">
@@ -288,6 +299,7 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
+            {/* BLOCK CATCH ALL VIEW CLOSE */}
 
           </div>
         </main>
