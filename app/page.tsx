@@ -17,7 +17,8 @@ import {
   Settings,
   TestTube,
   X,
-  CheckSquare
+  CheckSquare,
+  LogOut
 } from 'lucide-react';
 // BLOCK IMPORTS CLOSE
 
@@ -96,8 +97,9 @@ export default function Dashboard() {
                 Dr. John Doe
               </span>
 
-              <span className="absolute left-11 text-[10px] font-bold text-red-400 uppercase tracking-widest transition-all duration-300 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0">
-                Slide to Logout →
+              <span className="absolute left-11 flex items-center gap-1 text-[10px] font-bold text-red-400 uppercase tracking-widest transition-all duration-300 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0">
+                Slide to Logout
+                <LogOut size={12} />
               </span>
             </div>
           </div>
@@ -270,9 +272,9 @@ export default function Dashboard() {
               <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
                 <div className="bg-white w-full max-w-5xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
                   
-                  {/* Modal Header with Matching Gradient */}
+                  {/* 1. Modal Header */}
                   <div 
-                    className="px-6 py-4 flex items-center justify-between border-b border-purple-100"
+                    className="px-6 py-4 flex items-center justify-between border-b border-purple-100 shrink-0"
                     style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }}
                   >
                     <div className="flex items-center gap-3">
@@ -287,8 +289,8 @@ export default function Dashboard() {
                     </button>
                   </div>
 
-                  {/* Modal Controls */}
-                  <div className="p-6 pb-2 space-y-4">
+                  {/* 2. Modal Controls (Search & Select All) */}
+                  <div className="p-6 pb-2 space-y-4 shrink-0 bg-white">
                     <p className="text-xs text-slate-500">Select which fields to display in the registration form. Unchecked fields will be hidden.</p>
                     
                     <div className="relative">
@@ -306,17 +308,17 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Content Area */}
-                  <div className="flex-1 p-6 overflow-y-auto bg-slate-50/50 min-h-[300px]">
-                     {/* Registration Elements will go here later */}
+                  {/* 3. Content Area (Scrollable) */}
+                  <div className="flex-1 p-6 overflow-y-auto bg-slate-50/50 min-h-[200px]">
+                     {/* We will add the grid of fields here next */}
                   </div>
 
-                  {/* Modal Footer */}
-                  <div className="p-4 border-t bg-white flex justify-end gap-3">
+                  {/* 4. Modal Footer (Fixed at bottom) */}
+                  <div className="p-4 border-t bg-white flex justify-end gap-3 shrink-0">
                     <button 
                       onClick={() => setIsCustomizeModalOpen(false)}
                       className="px-6 py-2 rounded-lg text-white font-medium text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
-                      style={{ background: 'linear-gradient(to right, #ef5350, #ec407a)' }}
+                      style={{ background: 'linear-gradient(to right, #ab47bc, #f06292)' }}
                     >
                       Cancel
                     </button>
