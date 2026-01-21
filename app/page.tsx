@@ -5,15 +5,10 @@ import React, { useState } from 'react';
 import { 
   Menu, 
   Home, 
-  UserPlus, 
   Users, 
   FileText, 
-  FlaskConical, 
-  Settings2, 
-  IdCard, 
   ChevronDown, 
   ChevronUp, 
-  LogOut, 
   ReceiptText, 
   SlidersHorizontal, 
   CreditCard,
@@ -29,18 +24,7 @@ export default function Dashboard() {
   // BLOCK STATE SETUP OPEN
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
-  // This new line tracks which page is active
   const [activeView, setActiveView] = useState('dashboard');
-  const colors = {
-    purple: "#9575cd",
-    cyan: "#4dd0e1",
-    blue: "#64b5f6",
-    pink: "#f06292",
-    background: "#eceff1",
-    darkText: "#263238",
-    mediumText: "#455a64",
-    lightText: "#607d8b" // Added this to fix the error
-  };
   // BLOCK STATE SETUP CLOSE
 
   return (
@@ -92,11 +76,9 @@ export default function Dashboard() {
             {/* SLIDE TO LOGOUT CONTAINER */}
             <div className="group relative bg-white/90 rounded-full p-1 flex items-center shadow-sm border border-slate-200 w-48 overflow-hidden transition-all duration-300 hover:border-red-200 hover:bg-red-50/50">
               
-              {/* JD Icon (The Handle) */}
               <div 
                 draggable="true"
                 onDragEnd={(e) => {
-                  // Logout trigger: if dragged significantly to the right
                   if (e.clientX > 1200) { 
                       window.location.reload();
                   }
@@ -107,12 +89,10 @@ export default function Dashboard() {
                 JD
               </div>
               
-              {/* Text Layer: Default (Name) */}
               <span className="absolute left-11 text-xs font-medium text-slate-700 transition-all duration-300 opacity-100 group-hover:opacity-0 group-hover:translate-x-4">
                 Dr. John Doe
               </span>
 
-              {/* Text Layer: Hover (Logout Instruction) */}
               <span className="absolute left-11 text-[10px] font-bold text-red-400 uppercase tracking-widest transition-all duration-300 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0">
                 Slide to Logout →
               </span>
@@ -123,7 +103,6 @@ export default function Dashboard() {
       {/* BLOCK HEADER CLOSE */}
 
       <div className="flex flex-1 overflow-hidden"> 
-      {/* This 'flex-1 overflow-hidden' is the key to fixing the sidebar */}
         
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
@@ -133,7 +112,6 @@ export default function Dashboard() {
           <nav className="flex-1 py-4">
             <ul className="space-y-1 px-2"> 
               
-              {/* Primary Links */}
               {[
                 { id: 'dashboard', icon: <Home size={18}/>, label: 'Dashboard' },
                 { id: 'registration', icon: <Users size={18}/>, label: 'New registration' },
@@ -151,7 +129,6 @@ export default function Dashboard() {
                 </li>
               ))}
 
-              {/* Dropdown: Test */}
               <div className="mt-1">
                 <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, test: !prev.test }))}
                   className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-medium text-[13px] cursor-pointer hover:bg-white/50 capitalize`}
@@ -174,7 +151,6 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Dropdown: Setup */}
               <div className="mt-1">
                 <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, setup: !prev.setup }))}
                   className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-medium text-[13px] cursor-pointer hover:bg-white/50 capitalize`}
@@ -197,7 +173,6 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Lab Profile */}
               <li onClick={() => setActiveView('profile')}
                   className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 mt-1 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-[#455a64]`}
                   style={{ 
@@ -226,20 +201,17 @@ export default function Dashboard() {
                       <p className="text-xs font-bold text-[#607d8b] uppercase">Today's Patients</p>
                       <p className="text-2xl font-bold text-[#263238]">24</p>
                    </div>
-                   {/* Card placeholders... */}
                 </div>
               </div>
             )}
             {/* BLOCK DASHBOARD VIEW CLOSE */}
 
-            // BLOCK REGISTRATION VIEW OPEN
+            {/* BLOCK REGISTRATION VIEW OPEN */}
             {activeView === 'registration' && (
               <div className="animate-in slide-in-from-bottom-2 duration-500 h-full">
                 
-                {/* Main Container with 10px Radius */}
                 <div className="bg-white rounded-[10px] shadow-xl shadow-slate-200/50 min-h-[900px] max-w-6xl mx-auto flex flex-col overflow-hidden border border-slate-100">
                   
-                  {/* 1. Header & Action Bar */}
                   <div className="p-8 pb-4 bg-white">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
                       <div className="flex items-center gap-3">
@@ -271,11 +243,9 @@ export default function Dashboard() {
                         </button>
                       </div>
                     </div>
-                    {/* Branded Hairline Divider */}
                     <div className="h-[0.5px] w-full" style={{ backgroundColor: 'rgba(77, 208, 225, 0.2)' }}></div>
                   </div>
 
-                  {/* 2. DASH-BORDERED CANVAS AREA */}
                   <div className="flex-1 p-6">
                     <div 
                       className="w-full h-full border-2 border-dashed rounded-lg flex items-center justify-center"
@@ -290,10 +260,46 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
-// BLOCK REGISTRATION VIEW CLOSE
+            {/* BLOCK REGISTRATION VIEW CLOSE */}
+
+            {/* BLOCK CUSTOMIZE REGISTRATION VIEW OPEN */}
+            {activeView === 'customize_registration' && (
+              <div className="animate-in slide-in-from-right duration-500 h-full">
+                <div className="bg-white rounded-[10px] shadow-xl shadow-slate-200/50 min-h-[900px] max-w-6xl mx-auto flex flex-col overflow-hidden border border-slate-100">
+                  
+                  {/* Header */}
+                  <div className="p-8 pb-4 bg-white">
+                    <div className="flex items-center gap-4 mb-5">
+                      <button 
+                        onClick={() => setActiveView('registration')}
+                        className="p-2 rounded-full hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-all"
+                      >
+                         <ChevronDown className="rotate-90" size={24} />
+                      </button>
+                      <div className="flex items-center gap-3">
+                        <div className="p-1.5 rounded-lg bg-purple-50 text-[#9d7df0] shadow-sm">
+                          <SlidersHorizontal size={20} />
+                        </div>
+                        <h2 className="text-xl font-bold text-slate-700 tracking-tight">Customize Registration</h2>
+                      </div>
+                    </div>
+                    <div className="h-[0.5px] w-full" style={{ backgroundColor: 'rgba(157, 125, 240, 0.2)' }}></div>
+                  </div>
+                  
+                  {/* Content Area */}
+                  <div className="flex-1 p-6 bg-slate-50/50">
+                    <div className="flex flex-col items-center justify-center h-full text-slate-400">
+                       <SlidersHorizontal size={48} className="mb-4 opacity-20" />
+                       <p className="text-sm font-medium">Field customization options will be implemented here.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* BLOCK CUSTOMIZE REGISTRATION VIEW CLOSE */}
 
             {/* BLOCK CATCH ALL VIEW OPEN */}
-            {!['dashboard', 'registration'].includes(activeView) && (
+            {!['dashboard', 'registration', 'customize_registration'].includes(activeView) && (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <div className="p-6 bg-white rounded-3xl shadow-lg border border-purple-100">
                    <h2 className="text-xl font-bold text-[#9575cd] uppercase mb-2">{activeView.replace(/_/g, ' ')}</h2>
