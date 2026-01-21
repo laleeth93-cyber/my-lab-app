@@ -76,11 +76,11 @@ export default function Dashboard() {
       {/* This 'flex-1 overflow-hidden' is the key to fixing the sidebar */}
         {/* BLOCK SIDEBAR OPEN */}
         <aside 
-          className={`${isSidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 flex flex-col shadow-md border-r bg-white h-full overflow-y-auto shrink-0 z-40`}
+          className={`${isSidebarOpen ? 'w-56' : 'w-16'} transition-all duration-300 flex flex-col shadow-md border-r bg-white h-full overflow-y-auto shrink-0 z-40`}
           style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }}
         >
           <nav className="flex-1 py-4">
-            <ul className="space-y-1 px-3">
+            <ul className="space-y-1 px-2"> {/* Reduced horizontal padding */}
               
               {/* Primary Links */}
               {[
@@ -112,7 +112,7 @@ export default function Dashboard() {
                   {isSidebarOpen && (openMenus.test ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
                 </li>
                 {isSidebarOpen && openMenus.test && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l border-purple-200">
+                  <ul className="ml-8 mt-1 space-y-1 border-l border-purple-200"> {/* Slightly reduced margin */}
                     {['Tests', 'Specimen & formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
                       <li key={sub} onClick={() => setActiveView(sub.toLowerCase().replace(/ /g, '_'))}
                           className="p-2 text-[13px] font-medium text-slate-500 hover:text-[#9575cd] cursor-pointer pl-4 capitalize transition-colors">
@@ -135,7 +135,7 @@ export default function Dashboard() {
                   {isSidebarOpen && (openMenus.setup ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
                 </li>
                 {isSidebarOpen && openMenus.setup && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l border-cyan-200">
+                  <ul className="ml-8 mt-1 space-y-1 border-l border-cyan-200">
                     {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
                       <li key={sub} onClick={() => setActiveView(sub.toLowerCase())}
                           className="p-2 text-[13px] font-medium text-slate-500 hover:text-[#4dd0e1] cursor-pointer pl-4 capitalize transition-colors">
@@ -158,7 +158,7 @@ export default function Dashboard() {
                   {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
                 </li>
                 {isSidebarOpen && openMenus.mgmt && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l border-pink-200">
+                  <ul className="ml-8 mt-1 space-y-1 border-l border-pink-200">
                     {['Referral list', 'Manage users', 'Processing lab'].map((sub) => (
                       <li key={sub} onClick={() => setActiveView(sub.toLowerCase().replace(/ /g, '_'))}
                           className="p-2 text-[13px] font-medium text-slate-500 hover:text-[#f06292] cursor-pointer pl-4 capitalize transition-colors">
