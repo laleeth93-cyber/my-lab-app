@@ -204,49 +204,57 @@ export default function Dashboard() {
             )}
 
             {/* VIEW 2: REGISTRATION PAGE */}
-                        {activeView === 'registration' && (
+            {activeView === 'registration' && (
               <div className="animate-in slide-in-from-bottom-2 duration-500 h-full">
                 
-                {/* 1. Header Action Bar */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-cyan-50/50 text-cyan-400">
-                      <Users size={24} />
-                    </div>
-                    <h2 className="text-2xl font-bold text-slate-700">New Registration</h2>
-                  </div>
+                {/* Unified Big Canvas with Hairline Cyan Border */}
+                <div className="bg-white rounded-[10px] shadow-xl shadow-slate-200/50 border-[0.5px] min-h-[900px] max-w-6xl mx-auto flex flex-col overflow-hidden"
+                     style={{ borderColor: 'rgba(77, 208, 225, 0.3)' }}> {/* Extremely subtle 0.5px border */}
                   
-                  <div className="flex flex-wrap items-center gap-3">
-                    <button className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-bold text-sm shadow-sm transition-all hover:opacity-90"
-                      style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
-                      <FileText size={18} className="opacity-40" />
-                      Quotation
-                    </button>
+                  {/* 1. Header & Action Bar Area */}
+                  <div className="p-8 border-b border-slate-50 bg-white">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        {/* Registration Icon with Cyan Background */}
+                        <div className="p-2 rounded-xl bg-cyan-50 text-[#4dd0e1] shadow-sm">
+                          <Users size={24} />
+                        </div>
+                        <h2 className="text-2xl font-bold text-slate-700 tracking-tight">New Registration</h2>
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-3">
+                        {/* Quotation Button */}
+                        <button className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+                          style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
+                          <FileText size={18} className="opacity-40" />
+                          Quotation
+                        </button>
 
-                    <button className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-bold text-sm shadow-sm transition-all hover:opacity-90"
-                      style={{ background: 'linear-gradient(to right, #9d7df0, #f062a4)' }}>
-                      <Settings size={18} className="opacity-40" />
-                      Customize Registration
-                    </button>
+                        {/* Customize Registration Button */}
+                        <button className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+                          style={{ background: 'linear-gradient(to right, #9d7df0, #f062a4)' }}>
+                          <Settings size={18} className="opacity-40" />
+                          Customize Registration
+                        </button>
 
-                    <button className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-bold text-sm shadow-sm transition-all hover:opacity-90"
-                      style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
-                      <Bell size={18} className="opacity-40" />
-                      Go to Billing
-                    </button>
+                        {/* Go to Billing Button */}
+                        <button className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+                          style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
+                          <Bell size={18} className="opacity-40" />
+                          Go to Billing
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="border-t border-cyan-100/50 mb-8"></div>
+                  {/* 2. Content Area */}
+                  <div className="flex-1 p-12 flex flex-col items-center justify-start">
+                      <p className="text-slate-300 italic text-sm">Unified Canvas with Hairline Border Ready...</p>
+                  </div>
 
-                {/* 2. Empty Canvas with 10px Border Radius */}
-                <div className="bg-white rounded-[10px] shadow-xl shadow-slate-200/50 border border-white min-h-[600px] max-w-6xl mx-auto flex items-center justify-center">
-                    {/* Border curve set to 10px. Content removed as requested. */}
-                    <p className="text-slate-300 italic text-sm">Clean 10px Canvas Ready...</p>
                 </div>
               </div>
             )}
-
             {/* VIEW 3: CATCH-ALL FOR OTHER PAGES */}
             {!['dashboard', 'registration'].includes(activeView) && (
               <div className="flex flex-col items-center justify-center h-full text-center">
