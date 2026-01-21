@@ -232,7 +232,7 @@ export default function Dashboard() {
             )}
             {/* BLOCK DASHBOARD VIEW CLOSE */}
 
-            {/* BLOCK REGISTRATION VIEW OPEN */}
+            // BLOCK REGISTRATION VIEW OPEN
             {activeView === 'registration' && (
               <div className="animate-in slide-in-from-bottom-2 duration-500 h-full">
                 
@@ -256,7 +256,9 @@ export default function Dashboard() {
                           Quotation
                         </button>
 
-                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-[5px] text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
+                        <button 
+                          onClick={() => setActiveView('customize_registration')}
+                          className="flex items-center gap-2 px-6 py-1.5 rounded-[5px] text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
                           style={{ background: 'linear-gradient(to right, #9d7df0, #f062a4)' }}>
                           <SlidersHorizontal size={16} className="opacity-60" />
                           Customize registration
@@ -288,7 +290,7 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
-            {/* BLOCK REGISTRATION VIEW CLOSE */}
+// BLOCK REGISTRATION VIEW CLOSE
 
             {/* BLOCK CATCH ALL VIEW OPEN */}
             {!['dashboard', 'registration'].includes(activeView) && (
