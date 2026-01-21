@@ -215,10 +215,10 @@ export default function Dashboard() {
                 
                 {/* Unified Big Canvas with Hairline Cyan Border */}
                 <div className="bg-white rounded-[10px] shadow-xl shadow-slate-200/50 border-[0.5px] min-h-[900px] max-w-6xl mx-auto flex flex-col overflow-hidden"
-                     style={{ borderColor: 'rgba(77, 208, 225, 0.3)' }}> {/* Extremely subtle 0.5px border */}
+                     style={{ borderColor: 'rgba(77, 208, 225, 0.3)' }}>
                   
-                  {/* 1. Header & Action Bar Area */}
-                  <div className="p-8 border-b border-slate-50 bg-white">
+                  {/* 1. Header & Action Bar Area with Cyan Bottom Line */}
+                  <div className="p-8 border-b bg-white" style={{ borderBottomColor: '#4dd0e1' }}>
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
                         {/* Registration Icon with Cyan Background */}
@@ -230,24 +230,24 @@ export default function Dashboard() {
                       
                       <div className="flex flex-wrap items-center gap-3">
                         {/* Quotation Button */}
-                        <button className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-lg text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
                           style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
-                          <FileText size={18} className="opacity-40" />
+                          <FileText size={16} className="opacity-40" />
                           Quotation
                         </button>
 
                         {/* Customize Registration Button */}
-                        <button className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-lg text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
                           style={{ background: 'linear-gradient(to right, #9d7df0, #f062a4)' }}>
-                          <Settings size={18} className="opacity-40" />
-                          Customize Registration
+                          <Settings size={16} className="opacity-40" />
+                          Customize registration
                         </button>
 
                         {/* Go to Billing Button */}
-                        <button className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-lg text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
                           style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
-                          <Bell size={18} className="opacity-40" />
-                          Go to Billing
+                          <Bell size={16} className="opacity-40" />
+                          Go to billing
                         </button>
                       </div>
                     </div>
@@ -255,7 +255,7 @@ export default function Dashboard() {
 
                   {/* 2. Content Area */}
                   <div className="flex-1 p-12 flex flex-col items-center justify-start">
-                      <p className="text-slate-300 italic text-sm">Unified Canvas with Hairline Border Ready...</p>
+                      <p className="text-slate-300 italic text-[13px] font-medium capitalize">Unified canvas with cyan divider ready...</p>
                   </div>
 
                 </div>
