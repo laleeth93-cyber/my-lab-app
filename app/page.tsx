@@ -217,45 +217,49 @@ export default function Dashboard() {
                 <div className="bg-white rounded-[10px] shadow-xl shadow-slate-200/50 border-[0.5px] min-h-[900px] max-w-6xl mx-auto flex flex-col overflow-hidden"
                      style={{ borderColor: 'rgba(77, 208, 225, 0.3)' }}>
                   
-                  {/* 1. Header & Action Bar Area with Cyan Bottom Line */}
-                  <div className="p-8 border-b bg-white" style={{ borderBottomColor: '#4dd0e1' }}>
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  {/* 1. Header & Action Bar Area */}
+                  <div className="p-8 pb-4 bg-white">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
                       <div className="flex items-center gap-3">
-                        {/* Registration Icon with Cyan Background */}
-                        <div className="p-2 rounded-xl bg-cyan-50 text-[#4dd0e1] shadow-sm">
-                          <Users size={24} />
+                        {/* Reduced Registration Icon Size */}
+                        <div className="p-1.5 rounded-lg bg-cyan-50 text-[#4dd0e1] shadow-sm">
+                          <Users size={20} />
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-700 tracking-tight">New Registration</h2>
+                        {/* Reduced Heading Font Size */}
+                        <h2 className="text-xl font-bold text-slate-700 tracking-tight">New Registration</h2>
                       </div>
                       
                       <div className="flex flex-wrap items-center gap-3">
-                        {/* Quotation Button */}
-                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-lg text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
+                        {/* Quotation Button (5px Radius) */}
+                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-[5px] text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
                           style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
                           <FileText size={16} className="opacity-40" />
                           Quotation
                         </button>
 
-                        {/* Customize Registration Button */}
-                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-lg text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
+                        {/* Customize Registration Button (5px Radius) */}
+                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-[5px] text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
                           style={{ background: 'linear-gradient(to right, #9d7df0, #f062a4)' }}>
                           <Settings size={16} className="opacity-40" />
                           Customize registration
                         </button>
 
-                        {/* Go to Billing Button */}
-                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-lg text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
+                        {/* Go to Billing Button (5px Radius) */}
+                        <button className="flex items-center gap-2 px-6 py-1.5 rounded-[5px] text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
                           style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
                           <Bell size={16} className="opacity-40" />
                           Go to billing
                         </button>
                       </div>
                     </div>
+
+                    {/* Hairline Cyan Line */}
+                    <div className="h-[0.5px] w-full" style={{ backgroundColor: 'rgba(77, 208, 225, 0.2)' }}></div>
                   </div>
 
                   {/* 2. Content Area */}
                   <div className="flex-1 p-12 flex flex-col items-center justify-start">
-                      <p className="text-slate-300 italic text-[13px] font-medium capitalize">Unified canvas with cyan divider ready...</p>
+                      <p className="text-slate-300 italic text-[13px] font-medium capitalize">Unified canvas with compact header ready...</p>
                   </div>
 
                 </div>
