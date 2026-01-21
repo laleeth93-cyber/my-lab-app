@@ -23,7 +23,7 @@ export default function Dashboard() {
       
       {/* BLOCK HEADER OPEN */}
       <header 
-        className="h-16 flex items-center justify-between px-6 shadow-sm border-b shrink-0 z-50"
+        className="h-16 flex items-center justify-between px-6 shadow-sm border-b shrink-0 z-50 select-none"
         style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }}
       >
         <div className="flex items-center gap-4 min-w-fit">
@@ -56,16 +56,41 @@ export default function Dashboard() {
           <div className="hidden lg:flex items-center gap-2 text-slate-700">
              <span className="font-semibold text-sm">Metropolitan Diagnostic Center</span>
           </div>
-          <div className="flex items-center gap-2">
+          
+          <div className="flex items-center gap-4">
             <div className="relative p-2 rounded-lg bg-purple-200/30" style={{ color: '#9575cd' }}>
               <Bell size={20} />
               <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] text-white font-bold"
                     style={{ background: '#f06292' }}>3</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/90 rounded-full pl-1 pr-3 py-1 shadow-sm border">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-xs"
-                   style={{ background: 'linear-gradient(to bottom right, #9575cd, #f06292)' }}>JD</div>
-              <span className="text-xs font-medium text-slate-700">Dr. John Doe</span>
+
+            {/* SLIDE TO LOGOUT CONTAINER */}
+            <div className="group relative bg-white/90 rounded-full p-1 flex items-center shadow-sm border border-slate-200 w-48 overflow-hidden transition-all duration-300 hover:border-red-200 hover:bg-red-50/50">
+              
+              {/* JD Icon (The Handle) */}
+              <div 
+                draggable="true"
+                onDragEnd={(e) => {
+                  // Logout trigger: if dragged significantly to the right
+                  if (e.clientX > 1200) { 
+                     window.location.reload();
+                  }
+                }}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs cursor-grab active:cursor-grabbing z-20 shadow-sm transition-transform group-hover:scale-105"
+                style={{ background: 'linear-gradient(to bottom right, #9575cd, #f062a4)' }}
+              >
+                JD
+              </div>
+              
+              {/* Text Layer: Default (Name) */}
+              <span className="absolute left-11 text-xs font-medium text-slate-700 transition-all duration-300 opacity-100 group-hover:opacity-0 group-hover:translate-x-4">
+                Dr. John Doe
+              </span>
+
+              {/* Text Layer: Hover (Logout Instruction) */}
+              <span className="absolute left-11 text-[10px] font-bold text-red-400 uppercase tracking-widest transition-all duration-300 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0">
+                Slide to Logout →
+              </span>
             </div>
           </div>
         </div>
@@ -80,7 +105,7 @@ export default function Dashboard() {
           style={{ background: 'linear-gradient(to bottom, #e8eaf6, #f3e5f5)' }}
         >
           <nav className="flex-1 py-4">
-            <ul className="space-y-1 px-2"> {/* Reduced horizontal padding */}
+            <ul className="space-y-1 px-2"> 
               
               {/* Primary Links */}
               {[
@@ -112,7 +137,7 @@ export default function Dashboard() {
                   {isSidebarOpen && (openMenus.test ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
                 </li>
                 {isSidebarOpen && openMenus.test && (
-                  <ul className="ml-8 mt-1 space-y-1 border-l border-purple-200"> {/* Slightly reduced margin */}
+                  <ul className="ml-8 mt-1 space-y-1 border-l border-purple-200"> 
                     {['Tests', 'Specimen & formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
                       <li key={sub} onClick={() => setActiveView(sub.toLowerCase().replace(/ /g, '_'))}
                           className="p-2 text-[13px] font-medium text-slate-500 hover:text-[#9575cd] cursor-pointer pl-4 capitalize transition-colors">
@@ -146,29 +171,6 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Dropdown: Management */}
-              <div className="mt-1">
-                <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, mgmt: !prev.mgmt }))}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-medium text-[13px] cursor-pointer hover:bg-white/50 capitalize`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Users size={18} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="tracking-tight">Lab management</span>}
-                  </div>
-                  {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
-                </li>
-                {isSidebarOpen && openMenus.mgmt && (
-                  <ul className="ml-8 mt-1 space-y-1 border-l border-pink-200">
-                    {['Referral list', 'Manage users', 'Processing lab'].map((sub) => (
-                      <li key={sub} onClick={() => setActiveView(sub.toLowerCase().replace(/ /g, '_'))}
-                          className="p-2 text-[13px] font-medium text-slate-500 hover:text-[#f06292] cursor-pointer pl-4 capitalize transition-colors">
-                        {sub}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
               {/* Lab Profile */}
               <li onClick={() => setActiveView('profile')}
                   className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 mt-1 rounded-lg cursor-pointer transition-all hover:bg-white/50 text-[#455a64]`}
@@ -182,13 +184,6 @@ export default function Dashboard() {
 
             </ul>
           </nav>
-
-          <div className="p-4 border-t border-purple-100 bg-white/20">
-             <div className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2 rounded-lg cursor-pointer hover:bg-red-50 text-[#f06292]`}>
-               <LogOut size={18} />
-               {isSidebarOpen && <span className="text-[13px] font-medium capitalize ml-3">Logout</span>}
-             </div>
-          </div>
         </aside>
         {/* BLOCK SIDEBAR CLOSE */}
         {/* BLOCK MAIN CONTENT OPEN */}
