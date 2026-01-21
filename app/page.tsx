@@ -84,10 +84,10 @@ export default function Dashboard() {
               
               {/* Primary Links */}
               {[
-                { id: 'dashboard', icon: <Home size={20}/>, label: 'Dashboard' },
-                { id: 'registration', icon: <Users size={20}/>, label: 'New Registration' },
-                { id: 'entry', icon: <FileText size={20}/>, label: 'Result Entry' },
-                { id: 'list', icon: <Users size={20}/>, label: 'Patient List' },
+                { id: 'dashboard', icon: <Home size={18}/>, label: 'Dashboard' },
+                { id: 'registration', icon: <Users size={18}/>, label: 'New registration' },
+                { id: 'entry', icon: <FileText size={18}/>, label: 'Result entry' },
+                { id: 'list', icon: <Users size={18}/>, label: 'Patient list' },
               ].map((item) => (
                 <li key={item.id} onClick={() => setActiveView(item.id)}
                     className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2.5 rounded-lg cursor-pointer transition-all hover:bg-white/50`}
@@ -96,26 +96,28 @@ export default function Dashboard() {
                       color: activeView === item.id ? '#9575cd' : '#455a64' 
                     }}>
                   <span className="flex-shrink-0">{item.icon}</span>
-                  {isSidebarOpen && <span className="font-bold text-sm uppercase tracking-tight">{item.label}</span>}
+                  {isSidebarOpen && <span className="text-[13px] font-medium capitalize tracking-tight">{item.label}</span>}
                 </li>
               ))}
 
               {/* Dropdown: Test */}
               <div className="mt-1">
                 <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, test: !prev.test }))}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-medium text-[13px] cursor-pointer hover:bg-white/50 capitalize`}
                 >
                   <div className="flex items-center gap-3">
-                    <TestTube size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Test</span>}
+                    <TestTube size={18} className="flex-shrink-0" />
+                    {isSidebarOpen && <span className="tracking-tight">Test</span>}
                   </div>
-                  {isSidebarOpen && (openMenus.test ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                  {isSidebarOpen && (openMenus.test ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
                 </li>
                 {isSidebarOpen && openMenus.test && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-purple-200">
-                    {['Tests', 'Specimen & Formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
+                  <ul className="ml-9 mt-1 space-y-1 border-l border-purple-200">
+                    {['Tests', 'Specimen & formats', 'Parameters', 'Templates', 'Packages'].map((sub) => (
                       <li key={sub} onClick={() => setActiveView(sub.toLowerCase().replace(/ /g, '_'))}
-                          className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#9575cd] cursor-pointer pl-4 uppercase">{sub}</li>
+                          className="p-2 text-[13px] font-medium text-slate-500 hover:text-[#9575cd] cursor-pointer pl-4 capitalize transition-colors">
+                        {sub}
+                      </li>
                     ))}
                   </ul>
                 )}
@@ -124,19 +126,21 @@ export default function Dashboard() {
               {/* Dropdown: Setup */}
               <div className="mt-1">
                 <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, setup: !prev.setup }))}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-medium text-[13px] cursor-pointer hover:bg-white/50 capitalize`}
                 >
                   <div className="flex items-center gap-3">
-                    <Settings size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Setup</span>}
+                    <Settings size={18} className="flex-shrink-0" />
+                    {isSidebarOpen && <span className="tracking-tight">Setup</span>}
                   </div>
-                  {isSidebarOpen && (openMenus.setup ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                  {isSidebarOpen && (openMenus.setup ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
                 </li>
                 {isSidebarOpen && openMenus.setup && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-cyan-200">
+                  <ul className="ml-9 mt-1 space-y-1 border-l border-cyan-200">
                     {['Reports', 'UOM', 'Multivalues', 'Vacutainer', 'Doctors', 'Department'].map((sub) => (
                       <li key={sub} onClick={() => setActiveView(sub.toLowerCase())}
-                          className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#4dd0e1] cursor-pointer pl-4 uppercase">{sub}</li>
+                          className="p-2 text-[13px] font-medium text-slate-500 hover:text-[#4dd0e1] cursor-pointer pl-4 capitalize transition-colors">
+                        {sub}
+                      </li>
                     ))}
                   </ul>
                 )}
@@ -145,19 +149,21 @@ export default function Dashboard() {
               {/* Dropdown: Management */}
               <div className="mt-1">
                 <li onClick={() => isSidebarOpen && setOpenMenus(prev => ({ ...prev, mgmt: !prev.mgmt }))}
-                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-semibold text-sm cursor-pointer hover:bg-white/50`}
+                  className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} p-2.5 rounded-lg text-[#455a64] font-medium text-[13px] cursor-pointer hover:bg-white/50 capitalize`}
                 >
                   <div className="flex items-center gap-3">
-                    <Users size={20} className="flex-shrink-0" />
-                    {isSidebarOpen && <span className="whitespace-nowrap uppercase tracking-tight">Lab Management</span>}
+                    <Users size={18} className="flex-shrink-0" />
+                    {isSidebarOpen && <span className="tracking-tight">Lab management</span>}
                   </div>
-                  {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                  {isSidebarOpen && (openMenus.mgmt ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
                 </li>
                 {isSidebarOpen && openMenus.mgmt && (
-                  <ul className="ml-9 mt-1 space-y-1 border-l-2 border-pink-200">
-                    {['Referral List', 'Manage Users', 'Processing Lab'].map((sub) => (
+                  <ul className="ml-9 mt-1 space-y-1 border-l border-pink-200">
+                    {['Referral list', 'Manage users', 'Processing lab'].map((sub) => (
                       <li key={sub} onClick={() => setActiveView(sub.toLowerCase().replace(/ /g, '_'))}
-                          className="p-2 text-[11px] font-bold text-slate-500 hover:text-[#f06292] cursor-pointer pl-4 uppercase">{sub}</li>
+                          className="p-2 text-[13px] font-medium text-slate-500 hover:text-[#f06292] cursor-pointer pl-4 capitalize transition-colors">
+                        {sub}
+                      </li>
                     ))}
                   </ul>
                 )}
@@ -170,8 +176,8 @@ export default function Dashboard() {
                     backgroundColor: activeView === 'profile' ? 'rgba(149, 117, 205, 0.15)' : 'transparent', 
                     color: activeView === 'profile' ? '#9575cd' : '#455a64' 
                   }}>
-                <FileText size={20} className="flex-shrink-0" />
-                {isSidebarOpen && <span className="font-bold text-sm uppercase tracking-tight">Lab Profile</span>}
+                <FileText size={18} className="flex-shrink-0" />
+                {isSidebarOpen && <span className="text-[13px] font-medium capitalize tracking-tight">Lab profile</span>}
               </li>
 
             </ul>
@@ -179,8 +185,8 @@ export default function Dashboard() {
 
           <div className="p-4 border-t border-purple-100 bg-white/20">
              <div className={`flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-2 rounded-lg cursor-pointer hover:bg-red-50 text-[#f06292]`}>
-               <LogOut size={20} />
-               {isSidebarOpen && <span className="text-sm font-bold uppercase">Logout</span>}
+               <LogOut size={18} />
+               {isSidebarOpen && <span className="text-[13px] font-medium capitalize ml-3">Logout</span>}
              </div>
           </div>
         </aside>
