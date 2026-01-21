@@ -15,7 +15,9 @@ import {
   Bell,
   Search,
   Settings,
-  TestTube
+  TestTube,
+  X,
+  CheckSquare
 } from 'lucide-react';
 // BLOCK IMPORTS CLOSE
 
@@ -25,6 +27,7 @@ export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const [activeView, setActiveView] = useState('dashboard');
+  const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
   // BLOCK STATE SETUP CLOSE
 
   return (
@@ -229,7 +232,7 @@ export default function Dashboard() {
                         </button>
 
                         <button 
-                          onClick={() => setActiveView('customize_registration')}
+                          onClick={() => setIsCustomizeModalOpen(true)}
                           className="flex items-center gap-2 px-6 py-1.5 rounded-[5px] text-white font-medium text-[13px] capitalize shadow-md transition-all hover:opacity-90 active:scale-95"
                           style={{ background: 'linear-gradient(to right, #9d7df0, #f062a4)' }}>
                           <SlidersHorizontal size={16} className="opacity-60" />
@@ -262,44 +265,74 @@ export default function Dashboard() {
             )}
             {/* BLOCK REGISTRATION VIEW CLOSE */}
 
-            {/* BLOCK CUSTOMIZE REGISTRATION VIEW OPEN */}
-            {activeView === 'customize_registration' && (
-              <div className="animate-in slide-in-from-right duration-500 h-full">
-                <div className="bg-white rounded-[10px] shadow-xl shadow-slate-200/50 min-h-[900px] max-w-6xl mx-auto flex flex-col overflow-hidden border border-slate-100">
+            {/* BLOCK CUSTOMIZE MODAL OPEN */}
+            {isCustomizeModalOpen && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+                <div className="bg-white w-full max-w-5xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
                   
-                  {/* Header */}
-                  <div className="p-8 pb-4 bg-white">
-                    <div className="flex items-center gap-4 mb-5">
-                      <button 
-                        onClick={() => setActiveView('registration')}
-                        className="p-2 rounded-full hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-all"
-                      >
-                         <ChevronDown className="rotate-90" size={24} />
-                      </button>
-                      <div className="flex items-center gap-3">
-                        <div className="p-1.5 rounded-lg bg-purple-50 text-[#9d7df0] shadow-sm">
-                          <SlidersHorizontal size={20} />
-                        </div>
-                        <h2 className="text-xl font-bold text-slate-700 tracking-tight">Customize Registration</h2>
-                      </div>
+                  {/* Modal Header */}
+                  <div className="px-6 py-4 flex items-center justify-between border-b border-purple-100 bg-[#f3e5f5]/50">
+                    <div className="flex items-center gap-3">
+                      <SlidersHorizontal size={18} className="text-[#9575cd]" />
+                      <h3 className="font-bold text-slate-700">Customize Registration Fields</h3>
                     </div>
-                    <div className="h-[0.5px] w-full" style={{ backgroundColor: 'rgba(157, 125, 240, 0.2)' }}></div>
+                    <button 
+                      onClick={() => setIsCustomizeModalOpen(false)}
+                      className="p-1 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-400 transition-colors"
+                    >
+                      <X size={20} />
+                    </button>
                   </div>
-                  
+
+                  {/* Modal Controls */}
+                  <div className="p-6 pb-2 space-y-4">
+                    <p className="text-xs text-slate-500">Select which fields to display in the registration form. Unchecked fields will be hidden.</p>
+                    
+                    <div className="relative">
+                      <input 
+                        type="text" 
+                        placeholder="Search fields..." 
+                        className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#9575cd]/20 text-sm"
+                      />
+                      <Search size={16} className="absolute left-3.5 top-2.5 text-slate-400" />
+                    </div>
+
+                    <div className="flex items-center gap-2 px-1">
+                      <div className="w-4 h-4 rounded border border-slate-300"></div>
+                      <span className="text-sm font-medium text-slate-600">Select All Fields</span>
+                    </div>
+                  </div>
+
                   {/* Content Area */}
-                  <div className="flex-1 p-6 bg-slate-50/50">
-                    <div className="flex flex-col items-center justify-center h-full text-slate-400">
-                       <SlidersHorizontal size={48} className="mb-4 opacity-20" />
-                       <p className="text-sm font-medium">Field customization options will be implemented here.</p>
-                    </div>
+                  <div className="flex-1 p-6 overflow-y-auto bg-slate-50/50 min-h-[300px]">
+                     {/* Registration Elements will go here later */}
                   </div>
+
+                  {/* Modal Footer */}
+                  <div className="p-4 border-t bg-white flex justify-end gap-3">
+                    <button 
+                      onClick={() => setIsCustomizeModalOpen(false)}
+                      className="px-6 py-2 rounded-lg text-white font-medium text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+                      style={{ background: 'linear-gradient(to right, #ef5350, #ec407a)' }}
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={() => setIsCustomizeModalOpen(false)}
+                      className="px-6 py-2 rounded-lg text-white font-medium text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+                      style={{ background: 'linear-gradient(to right, #4dd0e1, #29b6f6)' }}
+                    >
+                      Apply Changes
+                    </button>
+                  </div>
+
                 </div>
               </div>
             )}
-            {/* BLOCK CUSTOMIZE REGISTRATION VIEW CLOSE */}
+            {/* BLOCK CUSTOMIZE MODAL CLOSE */}
 
             {/* BLOCK CATCH ALL VIEW OPEN */}
-            {!['dashboard', 'registration', 'customize_registration'].includes(activeView) && (
+            {!['dashboard', 'registration'].includes(activeView) && (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <div className="p-6 bg-white rounded-3xl shadow-lg border border-purple-100">
                    <h2 className="text-xl font-bold text-[#9575cd] uppercase mb-2">{activeView.replace(/_/g, ' ')}</h2>
