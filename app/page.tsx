@@ -265,20 +265,23 @@ export default function Dashboard() {
             )}
             {/* BLOCK REGISTRATION VIEW CLOSE */}
 
-            {/* BLOCK CUSTOMIZE MODAL OPEN */}
+            // BLOCK CUSTOMIZE MODAL OPEN
             {isCustomizeModalOpen && (
               <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
                 <div className="bg-white w-full max-w-5xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
                   
-                  {/* Modal Header */}
-                  <div className="px-6 py-4 flex items-center justify-between border-b border-purple-100 bg-[#f3e5f5]/50">
+                  {/* Modal Header with Matching Gradient */}
+                  <div 
+                    className="px-6 py-4 flex items-center justify-between border-b border-purple-100"
+                    style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }}
+                  >
                     <div className="flex items-center gap-3">
                       <SlidersHorizontal size={18} className="text-[#9575cd]" />
                       <h3 className="font-bold text-slate-700">Customize Registration Fields</h3>
                     </div>
                     <button 
                       onClick={() => setIsCustomizeModalOpen(false)}
-                      className="p-1 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-400 transition-colors"
+                      className="p-1 rounded-full hover:bg-white/40 text-slate-600 hover:text-red-500 transition-colors"
                     >
                       <X size={20} />
                     </button>
@@ -329,7 +332,7 @@ export default function Dashboard() {
                 </div>
               </div>
             )}
-            {/* BLOCK CUSTOMIZE MODAL CLOSE */}
+// BLOCK CUSTOMIZE MODAL CLOSE
 
             {/* BLOCK CATCH ALL VIEW OPEN */}
             {!['dashboard', 'registration'].includes(activeView) && (
