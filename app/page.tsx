@@ -1,3 +1,4 @@
+// FILE: app/page.tsx
 "use client";
 
 // BLOCK IMPORTS OPEN
@@ -9,12 +10,79 @@ import NewRegistration from './components/NewRegistration';
 import CustomizeRegistrationModal from './components/CustomizeRegistrationModal';
 // BLOCK IMPORTS CLOSE
 
+// BLOCK TYPES DEFINITION OPEN
+export interface FieldData {
+  id: number;
+  label: string;
+  category: string;
+  isVisible: boolean;
+  order: number | null;
+  width: string;
+  required: boolean;
+  placeholder?: string;
+  inputType: 'text' | 'select' | 'date' | 'textarea' | 'file' | 'age' | 'phone';
+  options?: string[];
+}
+
+const initialFieldsData: FieldData[] = [
+  // Basic Info
+  { id: 1, label: "Patient ID", category: "Basic Info", isVisible: true, order: 1, width: 'half', required: true, inputType: 'text', placeholder: 'Auto-generated' },
+  { id: 2, label: "Designation", category: "Basic Info", isVisible: true, order: 2, width: 'half', required: false, inputType: 'select', options: ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Baby', 'Master'] },
+  { id: 3, label: "First Name", category: "Basic Info", isVisible: true, order: 3, width: 'half', required: true, inputType: 'text', placeholder: 'First name' },
+  { id: 4, label: "Last Name", category: "Basic Info", isVisible: true, order: 4, width: 'half', required: true, inputType: 'text', placeholder: 'Last name' },
+  { id: 5, label: "Age", category: "Basic Info", isVisible: true, order: 5, width: 'half', required: true, inputType: 'age' },
+  { id: 6, label: "Gender", category: "Basic Info", isVisible: true, order: 6, width: 'half', required: true, inputType: 'select', options: ['Male', 'Female', 'Other'] },
+  
+  // Vitals
+  { id: 7, label: "Weight (kg)", category: "Vitals", isVisible: true, order: 7, width: 'half', required: false, inputType: 'text', placeholder: 'Weight' },
+  { id: 8, label: "Height (cm)", category: "Vitals", isVisible: true, order: 8, width: 'half', required: false, inputType: 'text', placeholder: 'Height' },
+  
+  // Contact Info
+  { id: 9, label: "Phone Number", category: "Contact Info", isVisible: true, order: 9, width: 'half', required: true, inputType: 'phone' },
+  { id: 10, label: "Email", category: "Contact Info", isVisible: true, order: 10, width: 'half', required: false, inputType: 'text', placeholder: 'Email' },
+  { id: 11, label: "Address", category: "Contact Info", isVisible: true, order: 11, width: 'full', required: false, inputType: 'textarea', placeholder: 'Address' },
+  
+  // Identification
+  { id: 12, label: "Aadhaar Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Aadhaar number' },
+  { id: 13, label: "Insurance Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Insurance number' },
+  { id: 14, label: "UHID", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'UHID' },
+  { id: 15, label: "Barcode", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Barcode' },
+  { id: 16, label: "Passport Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Passport number' },
+  { id: 17, label: "Owner Name", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Owner name' },
+  { id: 18, label: "Breed", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Breed' },
+
+  // Patient Info
+  { id: 19, label: "Category", category: "Patient Info", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['General', 'VIP', 'Staff', 'Emergency'] },
+
+  // Medical Info
+  { id: 20, label: "Clinical History", category: "Medical Info", isVisible: false, order: null, width: 'full', required: false, inputType: 'textarea', placeholder: 'Clinical history' },
+  { id: 21, label: "Documents", category: "Medical Info", isVisible: false, order: null, width: 'full', required: false, inputType: 'file' },
+
+  // Billing
+  { id: 22, label: "Payment", category: "Billing", isVisible: false, order: null, width: 'half', required: true, inputType: 'select', options: ['Cash', 'Card', 'UPI', 'Insurance'] },
+  { id: 23, label: "Rate List Type", category: "Billing", isVisible: false, order: null, width: 'half', required: true, inputType: 'select', options: ['Standard', 'Corporate', 'Camp'] },
+
+  // Referral
+  { id: 24, label: "Referring Doctor", category: "Referral", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['Dr. Smith', 'Dr. Jones', 'Self'] },
+  { id: 25, label: "Referring Hospital", category: "Referral", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['City Hospital', 'General Hospital'] },
+  { id: 26, label: "Company", category: "Referral", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['Corp A', 'Corp B'] },
+
+  // Collection
+  { id: 27, label: "Collected At", category: "Collection", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['Home', 'Lab', 'Center A'] },
+  { id: 28, label: "Collection Date & Time", category: "Collection", isVisible: false, order: null, width: 'half', required: false, inputType: 'date' },
+  { id: 29, label: "Dispatch Methods", category: "Collection", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['Email', 'SMS', 'Hard Copy'] },
+];
+// BLOCK TYPES DEFINITION CLOSE
+
 export default function Dashboard() {
   
   // BLOCK STATE SETUP OPEN
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeView, setActiveView] = useState('dashboard');
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
+  
+  // Master state for registration fields
+  const [registrationFields, setRegistrationFields] = useState<FieldData[]>(initialFieldsData);
   // BLOCK STATE SETUP CLOSE
 
   return (
@@ -48,7 +116,10 @@ export default function Dashboard() {
 
             {/* BLOCK REGISTRATION VIEW OPEN */}
             {activeView === 'registration' && (
-              <NewRegistration onCustomizeClick={() => setIsCustomizeModalOpen(true)} />
+              <NewRegistration 
+                fields={registrationFields}
+                onCustomizeClick={() => setIsCustomizeModalOpen(true)} 
+              />
             )}
             {/* BLOCK REGISTRATION VIEW CLOSE */}
 
@@ -56,6 +127,8 @@ export default function Dashboard() {
             <CustomizeRegistrationModal 
               isOpen={isCustomizeModalOpen} 
               onClose={() => setIsCustomizeModalOpen(false)} 
+              fields={registrationFields}
+              setFields={setRegistrationFields}
             />
             {/* BLOCK CUSTOMIZE MODAL CLOSE */}
 

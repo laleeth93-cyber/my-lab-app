@@ -5,71 +5,14 @@
 import React, { useState } from 'react';
 import { SlidersHorizontal, X, Search, Settings } from 'lucide-react';
 import ConfigureFieldModal from './ConfigureFieldModal';
+import { FieldData } from '../page'; // Import types from page
 // BLOCK IMPORTS CLOSE
 
-/// BLOCK TYPES OPEN
-interface FieldData {
-  id: number;
-  label: string;
-  category: string;
-  isVisible: boolean;
-  order: number | null;
-  width: string;
-  required: boolean;
-  placeholder?: string;
-}
+// BLOCK TYPES OPEN
+// FieldData is now imported from ../page.tsx to ensure consistency
 // BLOCK TYPES CLOSE
 
 // BLOCK INITIAL DATA OPEN
-const initialFieldsData: FieldData[] = [
-  // Basic Info
-  { id: 1, label: "Patient ID", category: "Basic Info", isVisible: true, order: 1, width: 'half', required: true },
-  { id: 2, label: "Designation", category: "Basic Info", isVisible: true, order: 2, width: 'half', required: false },
-  { id: 3, label: "First Name", category: "Basic Info", isVisible: true, order: 3, width: 'half', required: true },
-  { id: 4, label: "Last Name", category: "Basic Info", isVisible: true, order: 4, width: 'half', required: true },
-  { id: 5, label: "Age", category: "Basic Info", isVisible: true, order: 5, width: 'half', required: true },
-  { id: 6, label: "Gender", category: "Basic Info", isVisible: true, order: 6, width: 'half', required: true },
-  
-  // Vitals
-  { id: 7, label: "Weight", category: "Vitals", isVisible: true, order: 7, width: 'half', required: false },
-  { id: 8, label: "Height", category: "Vitals", isVisible: true, order: 8, width: 'half', required: false },
-  
-  // Contact Info
-  { id: 9, label: "Phone Number", category: "Contact Info", isVisible: true, order: 9, width: 'half', required: true },
-  { id: 10, label: "Email", category: "Contact Info", isVisible: true, order: 10, width: 'half', required: false },
-  { id: 11, label: "Address", category: "Contact Info", isVisible: true, order: 11, width: 'full', required: false },
-  
-  // Identification
-  { id: 12, label: "Aadhaar Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false },
-  { id: 13, label: "Insurance Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false },
-  { id: 14, label: "UHID", category: "Identification", isVisible: false, order: null, width: 'half', required: false },
-  { id: 15, label: "Barcode", category: "Identification", isVisible: false, order: null, width: 'half', required: false },
-  { id: 16, label: "Passport Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false },
-  { id: 17, label: "Owner Name", category: "Identification", isVisible: false, order: null, width: 'half', required: false },
-  { id: 18, label: "Breed", category: "Identification", isVisible: false, order: null, width: 'half', required: false },
-
-  // Patient Info
-  { id: 19, label: "Category", category: "Patient Info", isVisible: false, order: null, width: 'half', required: false },
-
-  // Medical Info
-  { id: 20, label: "Clinical History", category: "Medical Info", isVisible: false, order: null, width: 'full', required: false },
-  { id: 21, label: "Documents", category: "Medical Info", isVisible: false, order: null, width: 'full', required: false },
-
-  // Billing
-  { id: 22, label: "Payment", category: "Billing", isVisible: false, order: null, width: 'half', required: true },
-  { id: 23, label: "Rate List Type", category: "Billing", isVisible: false, order: null, width: 'half', required: true },
-
-  // Referral
-  { id: 24, label: "Referring Doctor", category: "Referral", isVisible: false, order: null, width: 'half', required: false },
-  { id: 25, label: "Referring Hospital", category: "Referral", isVisible: false, order: null, width: 'half', required: false },
-  { id: 26, label: "Company", category: "Referral", isVisible: false, order: null, width: 'half', required: false },
-
-  // Collection
-  { id: 27, label: "Collected At", category: "Collection", isVisible: false, order: null, width: 'half', required: false },
-  { id: 28, label: "Collection Date & Time", category: "Collection", isVisible: false, order: null, width: 'half', required: false },
-  { id: 29, label: "Dispatch Methods", category: "Collection", isVisible: false, order: null, width: 'half', required: false },
-];
-
 const categories = [
   "Basic Info", "Vitals", "Contact Info", "Identification", 
   "Patient Info", "Medical Info", "Billing", "Referral", "Collection"
@@ -80,10 +23,11 @@ const categories = [
 interface CustomizeRegistrationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  fields: FieldData[];
+  setFields: (fields: FieldData[]) => void;
 }
 
-export default function CustomizeRegistrationModal({ isOpen, onClose }: CustomizeRegistrationModalProps) {
-  const [fields, setFields] = useState<FieldData[]>(initialFieldsData);
+export default function CustomizeRegistrationModal({ isOpen, onClose, fields, setFields }: CustomizeRegistrationModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   // New state for handling the configuration modal
@@ -93,45 +37,50 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
   if (!isOpen) return null;
 
   const toggleField = (id: number) => {
-    setFields(prevFields => {
-      const targetField = prevFields.find(f => f.id === id);
-      if (!targetField) return prevFields;
+    // We now update the parent state directly using the prop
+    const newFields = [...fields];
+    const targetIndex = newFields.findIndex(f => f.id === id);
+    if (targetIndex === -1) return;
+    
+    const targetField = newFields[targetIndex];
 
-      if (targetField.isVisible) {
-        const removedOrder = targetField.order;
-        return prevFields.map(f => {
-          if (f.id === id) {
-            return { ...f, isVisible: false, order: null };
-          }
-          if (f.isVisible && f.order !== null && removedOrder !== null && f.order > removedOrder) {
-            return { ...f, order: f.order - 1 };
-          }
-          return f;
-        });
-      } else {
-        const currentMaxOrder = prevFields.reduce((max, f) => (f.order && f.order > max ? f.order : max), 0);
-        return prevFields.map(f => {
-          if (f.id === id) {
-            return { ...f, isVisible: true, order: currentMaxOrder + 1 };
-          }
-          return f;
-        });
-      }
-    });
+    if (targetField.isVisible) {
+       // Hide it
+       const removedOrder = targetField.order;
+       targetField.isVisible = false;
+       targetField.order = null;
+       
+       // Reorder remaining fields
+       newFields.forEach(f => {
+         if (f.isVisible && f.order !== null && removedOrder !== null && f.order > removedOrder) {
+           f.order = f.order - 1;
+         }
+       });
+    } else {
+       // Show it
+       const currentMaxOrder = newFields.reduce((max, f) => (f.order && f.order > max ? f.order : max), 0);
+       targetField.isVisible = true;
+       targetField.order = currentMaxOrder + 1;
+    }
+    
+    setFields(newFields);
   };
 
   const handleSelectAll = () => {
     const allVisible = fields.every(f => f.isVisible);
-    if (allVisible) {
-      setFields(fields.map(f => ({ ...f, isVisible: false, order: null })));
-    } else {
-      let counter = 1;
-      setFields(fields.map(f => ({ ...f, isVisible: true, order: counter++ })));
-    }
+    const newFields = fields.map(f => {
+       if (allVisible) {
+         return { ...f, isVisible: false, order: null };
+       } else {
+         return { ...f, isVisible: true, order: f.id }; // Simple ordering for select all
+       }
+    });
+    setFields(newFields);
   };
 
   // Handler to open the configure modal
-  const handleConfigureClick = (field: FieldData) => {
+  const handleConfigureClick = (e: React.MouseEvent, field: FieldData) => {
+    e.stopPropagation(); 
     setActiveField(field);
     setIsConfigModalOpen(true);
   };
@@ -217,8 +166,9 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
                    {categoryFields.map((field) => (
                      <div 
                        key={field.id} 
+                       onClick={() => toggleField(field.id)}
                        className={`
-                         bg-white border rounded-lg p-2.5 flex items-center justify-between shadow-sm hover:shadow-md transition-all
+                         bg-white border rounded-lg p-2.5 flex items-center justify-between shadow-sm hover:shadow-md transition-all cursor-pointer
                          ${field.isVisible ? 'border-cyan-200' : 'border-slate-200'}
                        `}
                      >
@@ -226,8 +176,8 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
                           <input 
                             type="checkbox" 
                             checked={field.isVisible}
-                            onChange={() => toggleField(field.id)}
-                            className="w-4 h-4 rounded border-slate-300 text-[#4dd0e1] focus:ring-[#4dd0e1] cursor-pointer" 
+                            readOnly
+                            className="w-4 h-4 rounded border-slate-300 text-[#4dd0e1] focus:ring-[#4dd0e1] pointer-events-none" 
                           />
                           
                           {/* Number Badge */}
@@ -242,9 +192,9 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
                           </span>
                         </div>
 
-                        {/* Settings Icon: Wired up to open ConfigureFieldModal */}
+                        {/* Settings Icon */}
                         <button 
-                          onClick={() => handleConfigureClick(field)}
+                          onClick={(e) => handleConfigureClick(e, field)}
                           className="p-1 rounded-full bg-cyan-50 text-slate-500 hover:bg-cyan-100 hover:text-slate-600 transition-colors flex items-center justify-center"
                         >
                           <Settings size={12} />
@@ -275,7 +225,7 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
           </button>
         </div>
 
-        {/* Configure Field Modal (Stacked on top) */}
+        {/* Configure Field Modal */}
         <ConfigureFieldModal 
           isOpen={isConfigModalOpen}
           onClose={() => setIsConfigModalOpen(false)}

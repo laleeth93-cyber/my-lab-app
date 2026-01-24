@@ -1,20 +1,13 @@
+// FILE: app/components/ConfigureFieldModal.tsx
 "use client";
 
+// BLOCK IMPORTS OPEN
 import React, { useState, useEffect } from 'react';
-import { Settings, X, Type, CheckSquare } from 'lucide-react';
+import { Settings, X, Type, ToggleLeft } from 'lucide-react';
+import { FieldData } from '../page'; // Imported from central source
+// BLOCK IMPORTS CLOSE
 
-// --- TYPES ---
-interface FieldData {
-  id: number;
-  label: string;
-  category: string;
-  isVisible: boolean;
-  order: number | null;
-  width: 'full' | 'half' | 'one-third';
-  required: boolean;
-  placeholder?: string;
-}
-
+// BLOCK COMPONENT DEFINITION OPEN
 interface ConfigureFieldModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -22,11 +15,9 @@ interface ConfigureFieldModalProps {
   onSave: (updatedField: FieldData) => void;
 }
 
-// --- COMPONENT ---
 export default function ConfigureFieldModal({ isOpen, onClose, field, onSave }: ConfigureFieldModalProps) {
   const [formData, setFormData] = useState<FieldData | null>(null);
 
-  // Sync local state when the field prop changes
   useEffect(() => {
     if (field) {
       setFormData({ ...field });
@@ -44,16 +35,13 @@ export default function ConfigureFieldModal({ isOpen, onClose, field, onSave }: 
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden flex flex-col m-4 animate-in zoom-in-95 duration-200">
+      <div className="bg-white w-full max-w-[500px] rounded-xl shadow-2xl overflow-hidden flex flex-col m-4 animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div 
-          className="px-6 py-4 flex items-center justify-between border-b border-purple-100 shrink-0"
-          style={{ background: 'linear-gradient(to right, #e3f2fd, #f3e5f5)' }}
-        >
+        <div className="px-6 py-4 flex items-center justify-between border-b border-purple-100 shrink-0 bg-[#f3e5f5]">
           <div className="flex items-center gap-3">
-            <Settings size={18} className="text-[#9575cd]" fill="currentColor" />
-            <h3 className="font-bold text-slate-700">Configure Field</h3>
+            <Settings size={20} className="text-[#9575cd]" />
+            <h3 className="font-bold text-slate-700 text-lg">Configure Field</h3>
           </div>
           <button 
             onClick={onClose}
@@ -69,46 +57,54 @@ export default function ConfigureFieldModal({ isOpen, onClose, field, onSave }: 
           {/* Section 1: Field Properties */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Type size={16} className="text-[#9575cd]" />
-              <h4 className="font-bold text-slate-700 text-sm">Field Properties</h4>
+              <Type size={18} className="text-[#9575cd]" />
+              <h4 className="font-bold text-slate-700 text-base">Field Properties</h4>
             </div>
             
-            <div className="space-y-4 pl-1">
+            <div className="space-y-4">
               {/* Field Label */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-500">Field Label</label>
+                <label className="text-xs font-bold text-slate-600">Field Label</label>
                 <input 
                   type="text" 
                   value={formData.label}
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] focus:border-transparent transition-all"
                 />
               </div>
 
               {/* Placeholder Text */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-500">Placeholder Text</label>
+                <label className="text-xs font-bold text-slate-600">Placeholder Text</label>
                 <input 
                   type="text" 
                   value={formData.placeholder || ''}
                   onChange={(e) => setFormData({ ...formData, placeholder: e.target.value })}
-                  placeholder="e.g. Enter value..."
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all"
+                  placeholder="Auto-generated"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] focus:border-transparent transition-all"
                 />
               </div>
 
               {/* Field Width */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-500">Field Width</label>
-                <select 
-                  value={formData.width}
-                  onChange={(e) => setFormData({ ...formData, width: e.target.value as any })}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] bg-white transition-all"
-                >
-                  <option value="half">2 Columns (Half Width)</option>
-                  <option value="full">1 Column (Full Width)</option>
-                  <option value="one-third">3 Columns (One Third)</option>
-                </select>
+                <label className="text-xs font-bold text-slate-600">Field Width</label>
+                <div className="relative">
+                  <select 
+                    value={formData.width}
+                    onChange={(e) => setFormData({ ...formData, width: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] focus:border-transparent bg-white appearance-none cursor-pointer"
+                  >
+                    <option value="1_col">1 Column</option>
+                    <option value="half">2 Columns</option>
+                    <option value="3_col">3 Columns</option>
+                    <option value="full">Full Width</option>
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -118,19 +114,19 @@ export default function ConfigureFieldModal({ isOpen, onClose, field, onSave }: 
           {/* Section 2: Field Options */}
           <div>
              <div className="flex items-center gap-2 mb-4">
-              <CheckSquare size={16} className="text-[#9575cd]" />
-              <h4 className="font-bold text-slate-700 text-sm">Field Options</h4>
+              <ToggleLeft size={18} className="text-[#9575cd]" />
+              <h4 className="font-bold text-slate-700 text-base">Field Options</h4>
             </div>
 
-            <div className="space-y-3 pl-1">
+            <div className="space-y-3">
               <label className="flex items-center gap-3 cursor-pointer group">
                 <input 
                   type="checkbox" 
                   checked={formData.required}
                   onChange={(e) => setFormData({ ...formData, required: e.target.checked })}
-                  className="w-4 h-4 rounded border-slate-300 text-[#4dd0e1] focus:ring-[#4dd0e1] cursor-pointer"
+                  className="w-5 h-5 rounded border-gray-300 text-slate-600 focus:ring-slate-500"
                 />
-                <span className="text-sm font-medium text-slate-600 group-hover:text-slate-800 transition-colors">Required Field</span>
+                <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Required</span>
               </label>
 
               <label className="flex items-center gap-3 cursor-pointer group">
@@ -138,9 +134,9 @@ export default function ConfigureFieldModal({ isOpen, onClose, field, onSave }: 
                   type="checkbox" 
                   checked={formData.isVisible}
                   onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
-                  className="w-4 h-4 rounded border-slate-300 text-[#4dd0e1] focus:ring-[#4dd0e1] cursor-pointer"
+                  className="w-5 h-5 rounded border-gray-300 text-slate-600 focus:ring-slate-500"
                 />
-                <span className="text-sm font-medium text-slate-600 group-hover:text-slate-800 transition-colors">Visible in Form</span>
+                <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">Visible in Form</span>
               </label>
             </div>
           </div>
@@ -148,18 +144,18 @@ export default function ConfigureFieldModal({ isOpen, onClose, field, onSave }: 
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t bg-slate-50 flex justify-end gap-3 shrink-0">
+        <div className="p-4 px-6 border-t border-slate-100 bg-white flex justify-end gap-3 shrink-0">
           <button 
             onClick={onClose}
-            className="px-6 py-2 rounded-lg text-white font-medium text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
-            style={{ background: 'linear-gradient(to right, #ab47bc, #f06292)' }}
+            className="px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+            style={{ background: 'linear-gradient(to right, #ba68c8, #f06292)' }}
           >
             Cancel
           </button>
           <button 
             onClick={handleSave}
-            className="px-6 py-2 rounded-lg text-white font-medium text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
-            style={{ background: 'linear-gradient(to right, #4dd0e1, #29b6f6)' }}
+            className="px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+            style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}
           >
             Save Changes
           </button>
@@ -169,3 +165,4 @@ export default function ConfigureFieldModal({ isOpen, onClose, field, onSave }: 
     </div>
   );
 }
+// BLOCK COMPONENT DEFINITION CLOSE
