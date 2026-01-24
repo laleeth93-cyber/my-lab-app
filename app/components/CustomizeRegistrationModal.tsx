@@ -1,18 +1,20 @@
+// FILE: app/components/CustomizeRegistrationModal.tsx
 "use client";
 
 // BLOCK IMPORTS OPEN
 import React, { useState } from 'react';
 import { SlidersHorizontal, X, Search, Settings } from 'lucide-react';
+import ConfigureFieldModal from './ConfigureFieldModal';
 // BLOCK IMPORTS CLOSE
 
-// BLOCK TYPES OPEN
+/// BLOCK TYPES OPEN
 interface FieldData {
   id: number;
   label: string;
   category: string;
   isVisible: boolean;
   order: number | null;
-  width: 'full' | 'half' | 'one-third';
+  width: string;
   required: boolean;
   placeholder?: string;
 }
@@ -84,6 +86,10 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
   const [fields, setFields] = useState<FieldData[]>(initialFieldsData);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // New state for handling the configuration modal
+  const [activeField, setActiveField] = useState<FieldData | null>(null);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+
   if (!isOpen) return null;
 
   const toggleField = (id: number) => {
@@ -122,6 +128,17 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
       let counter = 1;
       setFields(fields.map(f => ({ ...f, isVisible: true, order: counter++ })));
     }
+  };
+
+  // Handler to open the configure modal
+  const handleConfigureClick = (field: FieldData) => {
+    setActiveField(field);
+    setIsConfigModalOpen(true);
+  };
+
+  // Handler to save changes from the configure modal
+  const handleSaveField = (updatedField: FieldData) => {
+    setFields(fields.map(f => f.id === updatedField.id ? updatedField : f));
   };
 
   const filteredCategories = categories.filter(cat => {
@@ -225,8 +242,11 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
                           </span>
                         </div>
 
-                        {/* Settings Icon: Centered and Unfilled to show the gear 'hole' */}
-                        <button className="p-1 rounded-full bg-cyan-50 text-slate-500 hover:bg-cyan-100 hover:text-slate-600 transition-colors flex items-center justify-center">
+                        {/* Settings Icon: Wired up to open ConfigureFieldModal */}
+                        <button 
+                          onClick={() => handleConfigureClick(field)}
+                          className="p-1 rounded-full bg-cyan-50 text-slate-500 hover:bg-cyan-100 hover:text-slate-600 transition-colors flex items-center justify-center"
+                        >
                           <Settings size={12} />
                         </button>
                      </div>
@@ -254,6 +274,14 @@ export default function CustomizeRegistrationModal({ isOpen, onClose }: Customiz
             Apply Changes
           </button>
         </div>
+
+        {/* Configure Field Modal (Stacked on top) */}
+        <ConfigureFieldModal 
+          isOpen={isConfigModalOpen}
+          onClose={() => setIsConfigModalOpen(false)}
+          field={activeField}
+          onSave={handleSaveField}
+        />
 
       </div>
     </div>
