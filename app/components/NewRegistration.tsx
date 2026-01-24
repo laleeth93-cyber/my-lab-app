@@ -20,17 +20,6 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
     .filter(f => f.isVisible)
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  // Helper to determine grid column span
-  const getColSpan = (width: string) => {
-    switch(width) {
-      case '1_col': return 'col-span-1';
-      case 'half': return 'col-span-1 md:col-span-1 lg:col-span-2'; // Assumes 4-col grid on LG
-      case '3_col': return 'col-span-1 md:col-span-2 lg:col-span-3';
-      case 'full': return 'col-span-1 md:col-span-2 lg:col-span-4';
-      default: return 'col-span-1 md:col-span-1 lg:col-span-2';
-    }
-  };
-
   return (
     <div className="animate-in slide-in-from-bottom-2 duration-500 h-full flex flex-col">
       <div className="bg-white rounded-[10px] shadow-xl shadow-slate-200/50 h-full w-full mx-auto flex flex-col overflow-hidden border border-slate-100">
@@ -73,15 +62,23 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
         {/* Form Content Area */}
         <div className="flex-1 p-6 overflow-y-auto">
           <div 
-            className="w-full min-h-full border-2 border-dashed rounded-lg p-6"
+            className="w-full min-h-full border-2 border-dashed rounded-lg p-4"
             style={{ borderColor: 'rgba(77, 208, 225, 0.4)' }}
           >
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-6">
+             {/* UPDATED LAYOUT: Flexbox with Wrap
+                This allows us to strictly respect fixed pixel widths (70px, 100px, etc.)
+                Use gap-4 for consistent spacing between fixed elements.
+             */}
+             <div className="flex flex-wrap gap-4 items-end">
                 {visibleFields.map((field) => (
-                  <div key={field.id} className={getColSpan(field.width)}>
+                  <div 
+                    key={field.id} 
+                    className="flex-none relative" 
+                    style={{ width: field.width }}
+                  >
                     
                     {/* Label */}
-                    <label className="block text-[13px] font-bold text-slate-700 mb-2">
+                    <label className="block text-[13px] font-bold text-slate-700 mb-2 truncate" title={field.label}>
                       {field.label} {field.required && <span className="text-red-400">*</span>}
                     </label>
 
@@ -95,7 +92,7 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                     )}
 
                     {field.inputType === 'select' && (
-                       <div className="relative">
+                       <div className="relative w-full">
                          <select className="w-full px-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all text-slate-600 appearance-none bg-white">
                            <option>Select</option>
                            {field.options?.map(opt => <option key={opt}>{opt}</option>)}
@@ -108,28 +105,28 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
 
                     {field.inputType === 'age' && (
                       <div className="flex gap-2">
-                        <div className="flex-1 relative">
-                          <input type="text" placeholder="Years" className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
+                        <div className="flex-1 min-w-0">
+                          <input type="text" placeholder="Y" className="w-full px-2 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
                         </div>
-                        <div className="flex-1 relative">
-                          <input type="text" placeholder="Months" className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
+                        <div className="flex-1 min-w-0">
+                          <input type="text" placeholder="M" className="w-full px-2 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
                         </div>
-                        <div className="flex-1 relative">
-                          <input type="text" placeholder="Days" className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
+                        <div className="flex-1 min-w-0">
+                          <input type="text" placeholder="D" className="w-full px-2 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
                         </div>
                       </div>
                     )}
 
                     {field.inputType === 'phone' && (
-                       <div className="flex">
-                         <select className="px-2 py-2 rounded-l-lg border border-r-0 border-slate-200 text-sm bg-slate-50 text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]">
-                           <option>IN +91</option>
-                           <option>US +1</option>
+                       <div className="flex w-full">
+                         <select className="w-16 px-1 py-2 rounded-l-lg border border-r-0 border-slate-200 text-sm bg-slate-50 text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]">
+                           <option>+91</option>
+                           <option>+1</option>
                          </select>
                          <input 
                            type="text" 
-                           placeholder="Enter number" 
-                           className="w-full px-4 py-2 rounded-r-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-slate-600"
+                           placeholder="Number" 
+                           className="flex-1 w-full px-3 py-2 rounded-r-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-slate-600 min-w-0"
                          />
                        </div>
                     )}
@@ -143,11 +140,11 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                     )}
 
                     {field.inputType === 'date' && (
-                       <div className="relative">
+                       <div className="relative w-full">
                          <input 
                            type="text" 
                            placeholder="Select date" 
-                           defaultValue="24-Jan-2026 11:28 PM"
+                           defaultValue="24-Jan-2026"
                            className="w-full px-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-slate-600"
                          />
                          <Calendar size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -155,32 +152,24 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                     )}
 
                     {field.inputType === 'file' && (
-                      <div className="flex items-center gap-2">
-                        <div className="relative flex-1">
+                      <div className="flex items-center gap-2 w-full">
+                        <div className="relative flex-1 min-w-0">
                            <input type="file" className="hidden" id="file-upload" />
-                           <label htmlFor="file-upload" className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-700 bg-white cursor-pointer hover:bg-slate-50 transition-all border-dashed">
-                             <span className="font-medium">Choose Files</span>
-                             <Paperclip size={16} className="text-[#4dd0e1]" />
+                           <label htmlFor="file-upload" className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-700 bg-white cursor-pointer hover:bg-slate-50 transition-all border-dashed whitespace-nowrap overflow-hidden">
+                             <span className="font-medium truncate">Choose</span>
+                             <Paperclip size={16} className="text-[#4dd0e1] shrink-0 ml-2" />
                            </label>
                         </div>
-                        <span className="text-[11px] text-[#4dd0e1]">No files chosen</span>
                       </div>
                     )}
 
-                    {/* Add Plus Button for specific select fields like Doctor/Hospital */}
+                    {/* Add Plus Button for specific select fields */}
                     {(field.label.includes('Doctor') || field.label.includes('Hospital') || field.label.includes('Company') || field.label.includes('Collected At')) && (
-                      <div className="absolute top-0 right-0 -mt-1">
-                        <button className="p-1 bg-[#4dd0e1] text-white rounded hover:bg-[#26c6da] transition-colors">
-                           <Plus size={12} />
+                      <div className="absolute -top-1 right-0">
+                        <button className="p-0.5 bg-[#4dd0e1] text-white rounded hover:bg-[#26c6da] transition-colors">
+                           <Plus size={10} />
                         </button>
                       </div>
-                    )}
-                     
-                    {/* Layout Fix for relative plus button positioning */}
-                    {(field.label.includes('Doctor') || field.label.includes('Hospital') || field.label.includes('Company') || field.label.includes('Collected At')) && (
-                       <style jsx>{`
-                         .col-span-1, .col-span-2, .col-span-3, .col-span-4 { position: relative; }
-                       `}</style>
                     )}
 
                   </div>
