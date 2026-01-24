@@ -24,53 +24,54 @@ export interface FieldData {
   options?: string[];
 }
 
+// Updated Age to 80px to utilize the new column option
 const initialFieldsData: FieldData[] = [
   // Basic Info
-  { id: 1, label: "Patient ID", category: "Basic Info", isVisible: true, order: 1, width: 'half', required: true, inputType: 'text', placeholder: 'Auto-generated' },
-  { id: 2, label: "Designation", category: "Basic Info", isVisible: true, order: 2, width: 'half', required: false, inputType: 'select', options: ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Baby', 'Master'] },
-  { id: 3, label: "First Name", category: "Basic Info", isVisible: true, order: 3, width: 'half', required: true, inputType: 'text', placeholder: 'First name' },
-  { id: 4, label: "Last Name", category: "Basic Info", isVisible: true, order: 4, width: 'half', required: true, inputType: 'text', placeholder: 'Last name' },
-  { id: 5, label: "Age", category: "Basic Info", isVisible: true, order: 5, width: 'half', required: true, inputType: 'age' },
-  { id: 6, label: "Gender", category: "Basic Info", isVisible: true, order: 6, width: 'half', required: true, inputType: 'select', options: ['Male', 'Female', 'Other'] },
+  { id: 1, label: "Patient ID", category: "Basic Info", isVisible: true, order: 1, width: '180px', required: true, inputType: 'text', placeholder: 'Auto-generated' },
+  { id: 2, label: "Designation", category: "Basic Info", isVisible: true, order: 2, width: '120px', required: false, inputType: 'select', options: ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Baby', 'Master'] },
+  { id: 3, label: "First Name", category: "Basic Info", isVisible: true, order: 3, width: '230px', required: true, inputType: 'text', placeholder: 'First name' },
+  { id: 4, label: "Last Name", category: "Basic Info", isVisible: true, order: 4, width: '230px', required: true, inputType: 'text', placeholder: 'Last name' },
+  { id: 5, label: "Age", category: "Basic Info", isVisible: true, order: 5, width: '80px', required: true, inputType: 'age' },
+  { id: 6, label: "Gender", category: "Basic Info", isVisible: true, order: 6, width: '120px', required: true, inputType: 'select', options: ['Male', 'Female', 'Other'] },
   
   // Vitals
-  { id: 7, label: "Weight (kg)", category: "Vitals", isVisible: true, order: 7, width: 'half', required: false, inputType: 'text', placeholder: 'Weight' },
-  { id: 8, label: "Height (cm)", category: "Vitals", isVisible: true, order: 8, width: 'half', required: false, inputType: 'text', placeholder: 'Height' },
+  { id: 7, label: "Weight (kg)", category: "Vitals", isVisible: true, order: 7, width: '120px', required: false, inputType: 'text', placeholder: 'Weight' },
+  { id: 8, label: "Height (cm)", category: "Vitals", isVisible: true, order: 8, width: '120px', required: false, inputType: 'text', placeholder: 'Height' },
   
   // Contact Info
-  { id: 9, label: "Phone Number", category: "Contact Info", isVisible: true, order: 9, width: 'half', required: true, inputType: 'phone' },
-  { id: 10, label: "Email", category: "Contact Info", isVisible: true, order: 10, width: 'half', required: false, inputType: 'text', placeholder: 'Email' },
-  { id: 11, label: "Address", category: "Contact Info", isVisible: true, order: 11, width: 'full', required: false, inputType: 'textarea', placeholder: 'Address' },
+  { id: 9, label: "Phone Number", category: "Contact Info", isVisible: true, order: 9, width: '230px', required: true, inputType: 'phone' },
+  { id: 10, label: "Email", category: "Contact Info", isVisible: true, order: 10, width: '300px', required: false, inputType: 'text', placeholder: 'Email' },
+  { id: 11, label: "Address", category: "Contact Info", isVisible: true, order: 11, width: '100%', required: false, inputType: 'textarea', placeholder: 'Address' },
   
   // Identification
-  { id: 12, label: "Aadhaar Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Aadhaar number' },
-  { id: 13, label: "Insurance Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Insurance number' },
-  { id: 14, label: "UHID", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'UHID' },
-  { id: 15, label: "Barcode", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Barcode' },
-  { id: 16, label: "Passport Number", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Passport number' },
-  { id: 17, label: "Owner Name", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Owner name' },
-  { id: 18, label: "Breed", category: "Identification", isVisible: false, order: null, width: 'half', required: false, inputType: 'text', placeholder: 'Breed' },
+  { id: 12, label: "Aadhaar Number", category: "Identification", isVisible: false, order: null, width: '230px', required: false, inputType: 'text', placeholder: 'Aadhaar number' },
+  { id: 13, label: "Insurance Number", category: "Identification", isVisible: false, order: null, width: '230px', required: false, inputType: 'text', placeholder: 'Insurance number' },
+  { id: 14, label: "UHID", category: "Identification", isVisible: false, order: null, width: '180px', required: false, inputType: 'text', placeholder: 'UHID' },
+  { id: 15, label: "Barcode", category: "Identification", isVisible: false, order: null, width: '180px', required: false, inputType: 'text', placeholder: 'Barcode' },
+  { id: 16, label: "Passport Number", category: "Identification", isVisible: false, order: null, width: '230px', required: false, inputType: 'text', placeholder: 'Passport number' },
+  { id: 17, label: "Owner Name", category: "Identification", isVisible: false, order: null, width: '230px', required: false, inputType: 'text', placeholder: 'Owner name' },
+  { id: 18, label: "Breed", category: "Identification", isVisible: false, order: null, width: '180px', required: false, inputType: 'text', placeholder: 'Breed' },
 
   // Patient Info
-  { id: 19, label: "Category", category: "Patient Info", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['General', 'VIP', 'Staff', 'Emergency'] },
+  { id: 19, label: "Category", category: "Patient Info", isVisible: false, order: null, width: '180px', required: false, inputType: 'select', options: ['General', 'VIP', 'Staff', 'Emergency'] },
 
   // Medical Info
-  { id: 20, label: "Clinical History", category: "Medical Info", isVisible: false, order: null, width: 'full', required: false, inputType: 'textarea', placeholder: 'Clinical history' },
-  { id: 21, label: "Documents", category: "Medical Info", isVisible: false, order: null, width: 'full', required: false, inputType: 'file' },
+  { id: 20, label: "Clinical History", category: "Medical Info", isVisible: false, order: null, width: '100%', required: false, inputType: 'textarea', placeholder: 'Clinical history' },
+  { id: 21, label: "Documents", category: "Medical Info", isVisible: false, order: null, width: '100%', required: false, inputType: 'file' },
 
   // Billing
-  { id: 22, label: "Payment", category: "Billing", isVisible: false, order: null, width: 'half', required: true, inputType: 'select', options: ['Cash', 'Card', 'UPI', 'Insurance'] },
-  { id: 23, label: "Rate List Type", category: "Billing", isVisible: false, order: null, width: 'half', required: true, inputType: 'select', options: ['Standard', 'Corporate', 'Camp'] },
+  { id: 22, label: "Payment", category: "Billing", isVisible: false, order: null, width: '180px', required: true, inputType: 'select', options: ['Cash', 'Card', 'UPI', 'Insurance'] },
+  { id: 23, label: "Rate List Type", category: "Billing", isVisible: false, order: null, width: '180px', required: true, inputType: 'select', options: ['Standard', 'Corporate', 'Camp'] },
 
   // Referral
-  { id: 24, label: "Referring Doctor", category: "Referral", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['Dr. Smith', 'Dr. Jones', 'Self'] },
-  { id: 25, label: "Referring Hospital", category: "Referral", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['City Hospital', 'General Hospital'] },
-  { id: 26, label: "Company", category: "Referral", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['Corp A', 'Corp B'] },
+  { id: 24, label: "Referring Doctor", category: "Referral", isVisible: false, order: null, width: '230px', required: false, inputType: 'select', options: ['Dr. Smith', 'Dr. Jones', 'Self'] },
+  { id: 25, label: "Referring Hospital", category: "Referral", isVisible: false, order: null, width: '230px', required: false, inputType: 'select', options: ['City Hospital', 'General Hospital'] },
+  { id: 26, label: "Company", category: "Referral", isVisible: false, order: null, width: '230px', required: false, inputType: 'select', options: ['Corp A', 'Corp B'] },
 
   // Collection
-  { id: 27, label: "Collected At", category: "Collection", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['Home', 'Lab', 'Center A'] },
-  { id: 28, label: "Collection Date & Time", category: "Collection", isVisible: false, order: null, width: 'half', required: false, inputType: 'date' },
-  { id: 29, label: "Dispatch Methods", category: "Collection", isVisible: false, order: null, width: 'half', required: false, inputType: 'select', options: ['Email', 'SMS', 'Hard Copy'] },
+  { id: 27, label: "Collected At", category: "Collection", isVisible: false, order: null, width: '180px', required: false, inputType: 'select', options: ['Home', 'Lab', 'Center A'] },
+  { id: 28, label: "Collection Date & Time", category: "Collection", isVisible: false, order: null, width: '230px', required: false, inputType: 'date' },
+  { id: 29, label: "Dispatch Methods", category: "Collection", isVisible: false, order: null, width: '230px', required: false, inputType: 'select', options: ['Email', 'SMS', 'Hard Copy'] },
 ];
 // BLOCK TYPES DEFINITION CLOSE
 

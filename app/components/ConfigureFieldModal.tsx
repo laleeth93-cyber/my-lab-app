@@ -4,7 +4,7 @@
 // BLOCK IMPORTS OPEN
 import React, { useState, useEffect } from 'react';
 import { Settings, X, Type, ToggleLeft } from 'lucide-react';
-import { FieldData } from '../page'; // Imported from central source
+import { FieldData } from '../page';
 // BLOCK IMPORTS CLOSE
 
 // BLOCK COMPONENT DEFINITION OPEN
@@ -87,17 +87,19 @@ export default function ConfigureFieldModal({ isOpen, onClose, field, onSave }: 
 
               {/* Field Width */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-600">Field Width</label>
+                <label className="text-xs font-bold text-slate-600">Field Width (Fixed)</label>
                 <div className="relative">
                   <select 
                     value={formData.width}
                     onChange={(e) => setFormData({ ...formData, width: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] focus:border-transparent bg-white appearance-none cursor-pointer"
                   >
-                    <option value="1_col">1 Column</option>
-                    <option value="half">2 Columns</option>
-                    <option value="3_col">3 Columns</option>
-                    <option value="full">Full Width</option>
+                    <option value="80px">80px (X-Small)</option>
+                    <option value="120px">120px (Small)</option>
+                    <option value="180px">180px (Medium)</option>
+                    <option value="230px">230px (Large)</option>
+                    <option value="300px">300px (Extra Large)</option>
+                    <option value="100%">Full Width</option>
                   </select>
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
