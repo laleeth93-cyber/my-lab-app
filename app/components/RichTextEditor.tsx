@@ -17,7 +17,7 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
   return (
     <div className="h-full flex flex-col border border-slate-300 rounded-lg overflow-hidden relative z-0">
       <Editor
-        // CRITICAL FIX: Load from free CDN to bypass API Key validation errors
+        // CRITICAL: Use the CDN link. This bypasses the API Key entirely.
         tinymceScriptSrc="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js"
         
         value={value}
@@ -30,8 +30,8 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
           height: '100%',
           menubar: false,
           statusbar: false,
-          promotion: false, // Hides "Upgrade" button
-          branding: false, // Hides "Powered by Tiny"
+          promotion: false, 
+          branding: false, 
           
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',

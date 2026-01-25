@@ -4,7 +4,7 @@
 // BLOCK IMPORTS OPEN
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-// Import our custom RichTextEditor (No more ReactQuill)
+// CRITICAL CHANGE: Importing our new RichTextEditor, NOT ReactQuill
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 import { X, Calendar, TestTube, Search, ShoppingCart, Tag, CreditCard, Wallet, FileText, Hash, Check, Type } from 'lucide-react';
