@@ -3,3 +3,27 @@
 @tailwind components;
 @tailwind utilities;
 /* BLOCK TAILWIND CONFIGURATION CLOSE */
+
+/* BLOCK SCROLLBAR STYLES OPEN */
+/* Width for vertical scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track (background) */
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+/* Handle (the moving part) */
+::-webkit-scrollbar-thumb {
+  background: #cfd8dc; /* Light blue-grey to match theme */
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b0bec5; 
+}
+/* BLOCK SCROLLBAR STYLES CLOSE */

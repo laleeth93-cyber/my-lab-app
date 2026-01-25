@@ -8,6 +8,8 @@ import Sidebar from './components/Sidebar';
 import DashboardOverview from './components/DashboardOverview';
 import NewRegistration from './components/NewRegistration';
 import CustomizeRegistrationModal from './components/CustomizeRegistrationModal';
+import QuotationModal from './components/QuotationModal';
+import BillingModal from './components/BillingModal'; // Import the new Billing modal
 // BLOCK IMPORTS CLOSE
 
 // BLOCK TYPES DEFINITION OPEN
@@ -20,11 +22,10 @@ export interface FieldData {
   width: string;
   required: boolean;
   placeholder?: string;
-  inputType: 'text' | 'select' | 'date' | 'textarea' | 'file' | 'age' | 'phone';
+  inputType: 'text' | 'select' | 'date' | 'textarea' | 'file' | 'age' | 'phone' | 'multi-select';
   options?: string[];
 }
 
-// Updated Age to 80px to utilize the new column option
 const initialFieldsData: FieldData[] = [
   // Basic Info
   { id: 1, label: "Patient ID", category: "Basic Info", isVisible: true, order: 1, width: '180px', required: true, inputType: 'text', placeholder: 'Auto-generated' },
@@ -71,7 +72,7 @@ const initialFieldsData: FieldData[] = [
   // Collection
   { id: 27, label: "Collected At", category: "Collection", isVisible: false, order: null, width: '180px', required: false, inputType: 'select', options: ['Home', 'Lab', 'Center A'] },
   { id: 28, label: "Collection Date & Time", category: "Collection", isVisible: false, order: null, width: '230px', required: false, inputType: 'date' },
-  { id: 29, label: "Dispatch Methods", category: "Collection", isVisible: false, order: null, width: '230px', required: false, inputType: 'select', options: ['Email', 'SMS', 'Hard Copy'] },
+  { id: 29, label: "Dispatch Methods", category: "Collection", isVisible: false, order: null, width: '230px', required: false, inputType: 'multi-select', options: ['Email', 'SMS', 'Hard Copy', 'WhatsApp', 'Manual WhatsApp'] },
 ];
 // BLOCK TYPES DEFINITION CLOSE
 
@@ -81,8 +82,10 @@ export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeView, setActiveView] = useState('dashboard');
   const [isCustomizeModalOpen, setIsCustomizeModalOpen] = useState(false);
+  const [isQuotationModalOpen, setIsQuotationModalOpen] = useState(false);
+  // New State for Billing Modal
+  const [isBillingModalOpen, setIsBillingModalOpen] = useState(false);
   
-  // Master state for registration fields
   const [registrationFields, setRegistrationFields] = useState<FieldData[]>(initialFieldsData);
   // BLOCK STATE SETUP CLOSE
 
@@ -105,10 +108,6 @@ export default function Dashboard() {
 
         {/* BLOCK MAIN CONTENT OPEN */}
         <main className="flex-1 p-6 overflow-hidden h-full bg-[#eceff1]">
-          {/* Updates:
-              1. Removed 'pb-20' which was causing the extra gray space/scroll.
-              2. Added 'h-full flex flex-col' so children can fill the height perfectly.
-          */}
           <div className="w-full h-full flex flex-col mx-auto">
             
             {/* BLOCK DASHBOARD VIEW OPEN */}
@@ -120,6 +119,9 @@ export default function Dashboard() {
               <NewRegistration 
                 fields={registrationFields}
                 onCustomizeClick={() => setIsCustomizeModalOpen(true)} 
+                onQuotationClick={() => setIsQuotationModalOpen(true)}
+                // Pass Billing click handler
+                onBillingClick={() => setIsBillingModalOpen(true)}
               />
             )}
             {/* BLOCK REGISTRATION VIEW CLOSE */}
@@ -132,6 +134,20 @@ export default function Dashboard() {
               setFields={setRegistrationFields}
             />
             {/* BLOCK CUSTOMIZE MODAL CLOSE */}
+
+            {/* BLOCK QUOTATION MODAL OPEN */}
+            <QuotationModal 
+              isOpen={isQuotationModalOpen}
+              onClose={() => setIsQuotationModalOpen(false)}
+            />
+            {/* BLOCK QUOTATION MODAL CLOSE */}
+
+            {/* BLOCK BILLING MODAL OPEN */}
+            <BillingModal 
+              isOpen={isBillingModalOpen}
+              onClose={() => setIsBillingModalOpen(false)}
+            />
+            {/* BLOCK BILLING MODAL CLOSE */}
 
             {/* BLOCK CATCH ALL VIEW OPEN */}
             {!['dashboard', 'registration'].includes(activeView) && (
