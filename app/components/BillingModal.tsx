@@ -2,13 +2,12 @@
 "use client";
 
 // BLOCK IMPORTS OPEN
-import React, { useState, useMemo } from 'react';
-// Use dynamic import for ReactQuill to prevent SSR issues in Next.js
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css'; 
+// Import our custom RichTextEditor (No more ReactQuill)
+const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
-import { X, Calendar, TestTube, Search, ShoppingCart, Tag, CreditCard, Wallet, FileText, Hash, Check, XCircle, Type } from 'lucide-react';
+import { X, Calendar, TestTube, Search, ShoppingCart, Tag, CreditCard, Wallet, FileText, Hash, Check, Type } from 'lucide-react';
 // BLOCK IMPORTS CLOSE
 
 // BLOCK TYPES DEFINITION OPEN
@@ -47,17 +46,6 @@ export default function BillingModal({ isOpen, onClose, patientData, fields = []
   const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
   const [notesContent, setNotesContent] = useState('');
   const [tempNotesContent, setTempNotesContent] = useState('');
-
-  // Quill Editor Toolbar Configuration
-  const quillModules = useMemo(() => ({
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'color': [] }, { 'background': [] }],
-      ['clean']
-    ],
-  }), []);
 
   // Helper to toggle payment modes
   const togglePaymentMode = (mode: string) => {
@@ -193,7 +181,8 @@ export default function BillingModal({ isOpen, onClose, patientData, fields = []
                  <span className="truncate pr-2">
                    {notesContent ? (
                       <span className="italic text-cyan-800">
-                        {new DOMParser().parseFromString(notesContent, 'text/html').body.textContent?.slice(0, 25) || 'View Notes'}...
+                        {/* Safe HTML render for preview */}
+                        <span dangerouslySetInnerHTML={{ __html: notesContent.slice(0, 30) + (notesContent.length > 30 ? '...' : '') }} />
                       </span>
                    ) : 'Click to add notes'}
                  </span>
@@ -412,14 +401,13 @@ export default function BillingModal({ isOpen, onClose, patientData, fields = []
               </div>
 
               {/* Modal Body with Rich Text Editor */}
-              <div className="p-6 overflow-y-auto max-h-[60vh]">
-                <style jsx global>{`
-                   .popup-quill .ql-toolbar { border-top-left-radius: 8px; border-top-right-radius: 8px; background: #f8fafc; border-color: #e2e8f0; }
-                   .popup-quill .ql-container { border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-color: #e2e8f0; height: 300px; font-size: 14px; }
-                `}</style>
-                <div className="popup-quill">
-                  <ReactQuill theme="snow" value={tempNotesContent} onChange={setTempNotesContent} modules={quillModules} placeholder="Start typing your notes here..." />
-                </div>
+              <div className="p-6 overflow-y-auto max-h-[60vh] flex flex-col min-h-[400px]">
+                {/* CRITICAL FIX: Replaced ReactQuill with our RichTextEditor */}
+                <RichTextEditor 
+                  value={tempNotesContent} 
+                  onChange={setTempNotesContent} 
+                  placeholder="Start typing your notes here..." 
+                />
               </div>
 
               {/* Modal Footer */}
