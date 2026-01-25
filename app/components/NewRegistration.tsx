@@ -3,7 +3,7 @@
 
 // BLOCK IMPORTS OPEN
 import React from 'react';
-import { Users, ReceiptText, SlidersHorizontal, CreditCard, Paperclip, Calendar, Plus } from 'lucide-react';
+import { Users, ReceiptText, SlidersHorizontal, CreditCard, Paperclip, Calendar } from 'lucide-react'; // Removed 'Plus' import
 import { FieldData } from '../page';
 // BLOCK IMPORTS CLOSE
 
@@ -65,10 +65,6 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
             className="w-full min-h-full border-2 border-dashed rounded-lg p-4"
             style={{ borderColor: 'rgba(77, 208, 225, 0.4)' }}
           >
-             {/* UPDATED LAYOUT: Flexbox with Wrap
-                This allows us to strictly respect fixed pixel widths (70px, 100px, etc.)
-                Use gap-4 for consistent spacing between fixed elements.
-             */}
              <div className="flex flex-wrap gap-4 items-end">
                 {visibleFields.map((field) => (
                   <div 
@@ -87,13 +83,13 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                       <input 
                         type="text" 
                         placeholder={field.placeholder}
-                        className="w-full px-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all text-slate-600 placeholder:text-slate-400"
+                        className="w-full px-4 py-1.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all text-slate-600 placeholder:text-slate-400"
                       />
                     )}
 
                     {field.inputType === 'select' && (
                        <div className="relative w-full">
-                         <select className="w-full px-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all text-slate-600 appearance-none bg-white">
+                         <select className="w-full px-4 py-1.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all text-slate-600 appearance-none bg-white">
                            <option>Select</option>
                            {field.options?.map(opt => <option key={opt}>{opt}</option>)}
                          </select>
@@ -106,27 +102,27 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                     {field.inputType === 'age' && (
                       <div className="flex gap-2">
                         <div className="flex-1 min-w-0">
-                          <input type="text" placeholder="Y" className="w-full px-2 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
+                          <input type="text" placeholder="Y" className="w-full px-2 py-1.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <input type="text" placeholder="M" className="w-full px-2 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
+                          <input type="text" placeholder="M" className="w-full px-2 py-1.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <input type="text" placeholder="D" className="w-full px-2 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
+                          <input type="text" placeholder="D" className="w-full px-2 py-1.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-center" />
                         </div>
                       </div>
                     )}
 
                     {field.inputType === 'phone' && (
                        <div className="flex w-full">
-                         <select className="w-16 px-1 py-2 rounded-l-lg border border-r-0 border-slate-200 text-sm bg-slate-50 text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]">
+                         <select className="w-16 px-1 py-1.5 rounded-l border border-r-0 border-slate-200 text-sm bg-slate-50 text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]">
                            <option>+91</option>
                            <option>+1</option>
                          </select>
                          <input 
                            type="text" 
                            placeholder="Number" 
-                           className="flex-1 w-full px-3 py-2 rounded-r-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-slate-600 min-w-0"
+                           className="flex-1 w-full px-3 py-1.5 rounded-r border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-slate-600 min-w-0"
                          />
                        </div>
                     )}
@@ -135,7 +131,7 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                        <textarea 
                          rows={3}
                          placeholder={field.placeholder}
-                         className="w-full px-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all text-slate-600 resize-none"
+                         className="w-full px-4 py-1.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] transition-all text-slate-600 resize-none"
                        ></textarea>
                     )}
 
@@ -145,7 +141,7 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                            type="text" 
                            placeholder="Select date" 
                            defaultValue="24-Jan-2026"
-                           className="w-full px-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-slate-600"
+                           className="w-full px-4 py-1.5 rounded border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] text-slate-600"
                          />
                          <Calendar size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
                        </div>
@@ -155,7 +151,7 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                       <div className="flex items-center gap-2 w-full">
                         <div className="relative flex-1 min-w-0">
                            <input type="file" className="hidden" id="file-upload" />
-                           <label htmlFor="file-upload" className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-700 bg-white cursor-pointer hover:bg-slate-50 transition-all border-dashed whitespace-nowrap overflow-hidden">
+                           <label htmlFor="file-upload" className="w-full flex items-center justify-between px-4 py-1.5 rounded border border-slate-200 text-sm text-slate-700 bg-white cursor-pointer hover:bg-slate-50 transition-all border-dashed whitespace-nowrap overflow-hidden">
                              <span className="font-medium truncate">Choose</span>
                              <Paperclip size={16} className="text-[#4dd0e1] shrink-0 ml-2" />
                            </label>
@@ -163,14 +159,7 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                       </div>
                     )}
 
-                    {/* Add Plus Button for specific select fields */}
-                    {(field.label.includes('Doctor') || field.label.includes('Hospital') || field.label.includes('Company') || field.label.includes('Collected At')) && (
-                      <div className="absolute -top-1 right-0">
-                        <button className="p-0.5 bg-[#4dd0e1] text-white rounded hover:bg-[#26c6da] transition-colors">
-                           <Plus size={10} />
-                        </button>
-                      </div>
-                    )}
+                    {/* Removed Plus Button block here */}
 
                   </div>
                 ))}
