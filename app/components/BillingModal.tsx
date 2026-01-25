@@ -2,20 +2,104 @@
 "use client";
 
 // BLOCK IMPORTS OPEN
-import React, { useState } from 'react';
-import { X, Calendar, TestTube, Search, ShoppingCart, Tag, CreditCard, Wallet, FileText } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+// Use dynamic import for ReactQuill to prevent SSR issues in Next.js
+import dynamic from 'next/dynamic';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import 'react-quill/dist/quill.snow.css'; 
+
+import { X, Calendar, TestTube, Search, ShoppingCart, Tag, CreditCard, Wallet, FileText, Hash, Check, XCircle, Type } from 'lucide-react';
 // BLOCK IMPORTS CLOSE
+
+// BLOCK TYPES DEFINITION OPEN
+interface SimpleFieldData {
+  id: number;
+  label: string;
+  required: boolean;
+  isVisible: boolean;
+}
+// BLOCK TYPES DEFINITION CLOSE
 
 // BLOCK COMPONENT DEFINITION OPEN
 interface BillingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  patientData?: {
+    firstName: string;
+    lastName: string;
+    age: { Y: string; M: string; D: string };
+    gender: string;
+    phone: string;
+    email: string;
+    address: string;
+  };
+  fields?: SimpleFieldData[]; 
 }
 
-export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
+export default function BillingModal({ isOpen, onClose, patientData, fields = [] }: BillingModalProps) {
   if (!isOpen) return null;
 
-  const [paymentMode, setPaymentMode] = useState('Cash');
+  // Payment & Transaction States
+  const [paymentModes, setPaymentModes] = useState<string[]>(['Cash']);
+  const [transactionIds, setTransactionIds] = useState<Record<string, string>>({});
+
+  // Rich Text Editor States
+  const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
+  const [notesContent, setNotesContent] = useState('');
+  const [tempNotesContent, setTempNotesContent] = useState('');
+
+  // Quill Editor Toolbar Configuration
+  const quillModules = useMemo(() => ({
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'color': [] }, { 'background': [] }],
+      ['clean']
+    ],
+  }), []);
+
+  // Helper to toggle payment modes
+  const togglePaymentMode = (mode: string) => {
+    setPaymentModes(prev => {
+      if (prev.includes(mode)) {
+        return prev.length > 1 ? prev.filter(m => m !== mode) : prev;
+      } else {
+        return [...prev, mode];
+      }
+    });
+  };
+
+  // Helper to update transaction ID values
+  const handleTxidChange = (mode: string, value: string) => {
+    setTransactionIds(prev => ({ ...prev, [mode]: value }));
+  };
+
+  // Notes handlers
+  const handleOpenNotes = () => {
+    setTempNotesContent(notesContent); 
+    setIsNotesEditorOpen(true);
+  };
+
+  const handleSaveNotes = () => {
+    setNotesContent(tempNotesContent);
+    setIsNotesEditorOpen(false);
+  };
+
+  const handleCancelNotes = () => {
+    setIsNotesEditorOpen(false);
+  };
+
+  const fullName = patientData ? `${patientData.firstName} ${patientData.lastName}`.trim() : 'Not specified';
+  
+  const ageString = patientData?.age && (patientData.age.Y || patientData.age.M || patientData.age.D)
+    ? `${patientData.age.Y || '0'} Y ${patientData.age.M || '0'} M ${patientData.age.D || '0'} D`
+    : 'Not specified';
+
+  const isRequired = (id: number) => {
+    const field = fields.find(f => f.id === id);
+    return field ? (field.required && field.isVisible) : false;
+  };
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
@@ -28,51 +112,67 @@ export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
           </div>
           
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-             {/* Patient ID */}
              <div className="space-y-1">
                <label className="text-xs font-bold text-slate-500 block">Patient ID</label>
-               <div className="text-sm font-bold text-slate-700">Auto-generated</div>
+               <div className="text-sm font-bold text-slate-700">260125003</div>
              </div>
 
-             {/* Name */}
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Name</label>
-               <div className="text-xs text-slate-400 italic">Not specified</div>
-             </div>
+             {(isRequired(3) || isRequired(4)) && (
+               <div className="space-y-1">
+                 <label className="text-xs font-bold text-slate-500 block">Name</label>
+                 <div className={`text-xs ${fullName === 'Not specified' ? 'text-slate-400 italic' : 'text-slate-700 font-medium'}`}>
+                   {fullName}
+                 </div>
+               </div>
+             )}
 
-             {/* Age */}
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Age</label>
-               <div className="text-xs text-slate-400 italic">Not specified</div>
-             </div>
+             {isRequired(5) && (
+               <div className="space-y-1">
+                 <label className="text-xs font-bold text-slate-500 block">Age</label>
+                 <div className={`text-xs ${ageString === 'Not specified' ? 'text-slate-400 italic' : 'text-slate-700'}`}>
+                   {ageString}
+                 </div>
+               </div>
+             )}
 
-             {/* Gender */}
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Gender</label>
-               <div className="text-xs text-slate-400 italic">Not specified</div>
-             </div>
+             {isRequired(6) && (
+               <div className="space-y-1">
+                 <label className="text-xs font-bold text-slate-500 block">Gender</label>
+                 <div className={`text-xs ${!patientData?.gender ? 'text-slate-400 italic' : 'text-slate-700'}`}>
+                   {patientData?.gender || 'Not specified'}
+                 </div>
+               </div>
+             )}
 
-             {/* Phone */}
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Phone</label>
-               <div className="text-xs text-slate-400 italic">Not specified</div>
-             </div>
+             {isRequired(9) && (
+               <div className="space-y-1">
+                 <label className="text-xs font-bold text-slate-500 block">Phone</label>
+                 <div className={`text-xs ${!patientData?.phone ? 'text-slate-400 italic' : 'text-slate-700'}`}>
+                   {patientData?.phone || 'Not specified'}
+                 </div>
+               </div>
+             )}
 
-             {/* Email */}
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Email</label>
-               <div className="text-xs text-slate-400 italic">Not specified</div>
-             </div>
+             {isRequired(10) && (
+               <div className="space-y-1">
+                 <label className="text-xs font-bold text-slate-500 block">Email</label>
+                 <div className={`text-xs ${!patientData?.email ? 'text-slate-400 italic' : 'text-slate-700 truncate'}`} title={patientData?.email}>
+                   {patientData?.email || 'Not specified'}
+                 </div>
+               </div>
+             )}
 
-             {/* Address */}
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Address</label>
-               <div className="text-xs text-slate-400 italic">Not specified</div>
-             </div>
+             {isRequired(11) && (
+               <div className="space-y-1">
+                 <label className="text-xs font-bold text-slate-500 block">Address</label>
+                 <div className={`text-xs ${!patientData?.address ? 'text-slate-400 italic' : 'text-slate-700 line-clamp-2'}`} title={patientData?.address}>
+                   {patientData?.address || 'Not specified'}
+                 </div>
+               </div>
+             )}
 
              <div className="h-px bg-slate-100 my-2"></div>
 
-             {/* Date & Time */}
              <div className="space-y-1">
                <label className="text-xs font-bold text-slate-500 block">Date & Time</label>
                <div className="relative">
@@ -81,21 +181,31 @@ export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
                </div>
              </div>
 
-             {/* Additional Notes */}
+             {/* BLOCK ADDITIONAL NOTES RICH TEXT EDITOR OPEN */}
              <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Additional Notes</label>
-               <button className="w-full py-1.5 px-3 border border-dashed border-[#4dd0e1] text-[#4dd0e1] text-xs rounded bg-cyan-50/30 hover:bg-cyan-50 transition-colors flex items-center justify-between">
-                 <span>Click to add notes</span>
-                 <FileText size={12} />
+               <label className="text-xs font-bold text-slate-500 block mb-1">Additional Notes</label>
+               <button 
+                  onClick={handleOpenNotes}
+                  className={`w-full py-1.5 px-3 border border-dashed text-xs rounded transition-colors flex items-center justify-between group
+                    ${notesContent ? 'border-cyan-300 bg-cyan-50 text-cyan-700 hover:bg-cyan-100' : 'border-[#4dd0e1] text-[#4dd0e1] bg-cyan-50/30 hover:bg-cyan-50'}
+                  `}
+               >
+                 <span className="truncate pr-2">
+                   {notesContent ? (
+                      <span className="italic text-cyan-800">
+                        {new DOMParser().parseFromString(notesContent, 'text/html').body.textContent?.slice(0, 25) || 'View Notes'}...
+                      </span>
+                   ) : 'Click to add notes'}
+                 </span>
+                 <FileText size={12} className={notesContent ? "text-cyan-600 group-hover:text-cyan-800" : ""} />
                </button>
              </div>
+             {/* BLOCK ADDITIONAL NOTES RICH TEXT EDITOR CLOSE */}
           </div>
         </div>
 
         {/* RIGHT MAIN CONTENT */}
         <div className="flex-1 flex flex-col min-w-0 bg-white">
-          
-          {/* Header */}
           <div className="px-6 py-3 flex items-center justify-between border-b border-purple-100 bg-[#f3e5f5]/30">
             <div className="flex items-center gap-2">
                <div className="p-1.5 bg-purple-100 rounded text-[#9575cd]">
@@ -108,16 +218,13 @@ export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
             </button>
           </div>
 
-          {/* Scrollable Form Area */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            
-            {/* Section: Tests & Packages */}
+            {/* ... Other sections (Tests, Discount, Due Payment) ... */}
             <div>
               <div className="flex items-center gap-2 mb-3 text-slate-700">
                 <TestTube size={18} className="text-[#9575cd]" />
                 <h4 className="font-bold text-sm">Tests & Packages</h4>
               </div>
-              
               <div className="flex gap-2 mb-4">
                  <div className="relative flex-1">
                    <input type="text" placeholder="Search by test name or test code" className="w-full pl-9 pr-3 py-2 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
@@ -132,8 +239,6 @@ export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
                    Add to Cart
                  </button>
               </div>
-
-              {/* Table */}
               <div className="border border-slate-200 rounded-lg overflow-hidden">
                 <div className="bg-cyan-50/50 flex text-xs font-bold text-slate-600 py-2 border-b border-slate-200">
                   <div className="w-16 px-4 text-center">Sr No.</div>
@@ -149,13 +254,11 @@ export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
 
             <div className="h-px bg-slate-100 w-full"></div>
 
-            {/* Section: Discount */}
             <div>
               <div className="flex items-center gap-2 mb-3 text-slate-700">
                 <Tag size={18} className="text-[#9575cd]" />
                 <h4 className="font-bold text-sm">Discount</h4>
               </div>
-
               <div className="grid grid-cols-4 gap-4 mb-3">
                  <div className="space-y-1">
                    <label className="text-xs font-semibold text-slate-500">Discount By</label>
@@ -186,7 +289,6 @@ export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
 
             <div className="h-px bg-slate-100 w-full"></div>
 
-            {/* Section: Due Payment */}
             <div>
               <div className="flex items-center gap-2 mb-3 text-slate-700">
                 <Wallet size={18} className="text-[#9575cd]" />
@@ -206,35 +308,66 @@ export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
 
             <div className="h-px bg-slate-100 w-full"></div>
 
-            {/* Section: Payment */}
-            <div>
-              <div className="flex items-center gap-2 mb-3 text-slate-700">
-                 <CreditCard size={18} className="text-[#9575cd]" />
-                 <h4 className="font-bold text-sm">Payment</h4>
+            {/* BLOCK PAYMENT MODES OPEN */}
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center gap-2 mb-3 text-slate-700">
+                   <CreditCard size={18} className="text-[#9575cd]" />
+                   <h4 className="font-bold text-sm">Payment</h4>
+                </div>
+                <label className="text-xs font-semibold text-slate-500 block mb-2">Payment Mode (Split payment enabled)</label>
+                <div className="flex gap-4">
+                   {['Cash', 'Card', 'UPI', 'Insurance'].map((mode) => {
+                     const isSelected = paymentModes.includes(mode);
+                     return (
+                       <label 
+                         key={mode} 
+                         onClick={() => togglePaymentMode(mode)}
+                         className={`
+                          flex items-center gap-2 px-4 py-2 rounded border text-xs cursor-pointer transition-all
+                          ${isSelected ? 'border-[#4dd0e1] bg-cyan-50 text-cyan-700 font-bold shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}
+                        `}
+                       >
+                        <div className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center transition-colors ${isSelected ? 'bg-[#4dd0e1] border-[#4dd0e1]' : 'border-slate-300 bg-white'}`}>
+                          {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full"></div>}
+                        </div>
+                        {mode}
+                      </label>
+                     );
+                   })}
+                </div>
               </div>
-              <label className="text-xs font-semibold text-slate-500 block mb-2">Payment Mode</label>
-              <div className="flex gap-4">
-                 {['Cash', 'Card', 'UPI', 'Insurance'].map((mode) => (
-                   <label key={mode} className={`
-                      flex items-center gap-2 px-4 py-2 rounded border text-xs cursor-pointer transition-all
-                      ${paymentMode === mode ? 'border-[#4dd0e1] bg-cyan-50 text-cyan-700 font-bold shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}
-                   `}>
-                      <input 
-                        type="radio" 
-                        name="paymentMode" 
-                        value={mode}
-                        checked={paymentMode === mode}
-                        onChange={() => setPaymentMode(mode)}
-                        className="hidden" 
-                      />
-                      {paymentMode === mode ? <div className="w-3 h-3 rounded-full bg-[#4dd0e1] flex items-center justify-center"><div className="w-1.5 h-1.5 bg-white rounded-full"></div></div> : <div className="w-3 h-3 rounded-full border border-slate-300"></div>}
-                      {mode}
-                   </label>
-                 ))}
-              </div>
+              {(paymentModes.includes('Card') || paymentModes.includes('UPI')) && (
+                <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                   {paymentModes.includes('Card') && (
+                     <div className="space-y-1.5">
+                       <label className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5">
+                         <CreditCard size={12} className="text-slate-400" />
+                         Card Transaction ID
+                       </label>
+                       <div className="relative">
+                         <input type="text" placeholder="Enter Card Txn ID" value={transactionIds['Card'] || ''} onChange={(e) => handleTxidChange('Card', e.target.value)} className="w-full pl-8 pr-3 py-1.5 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] placeholder:text-slate-300" />
+                         <Hash size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                       </div>
+                     </div>
+                   )}
+                   {paymentModes.includes('UPI') && (
+                     <div className="space-y-1.5">
+                       <label className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5">
+                         <Wallet size={12} className="text-slate-400" />
+                         UPI Transaction ID
+                       </label>
+                       <div className="relative">
+                         <input type="text" placeholder="Enter UPI Txn ID" value={transactionIds['UPI'] || ''} onChange={(e) => handleTxidChange('UPI', e.target.value)} className="w-full pl-8 pr-3 py-1.5 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] placeholder:text-slate-300" />
+                         <Hash size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                       </div>
+                     </div>
+                   )}
+                </div>
+              )}
             </div>
-            
-            {/* Summary Section */}
+            {/* BLOCK PAYMENT MODES CLOSE */}
+
              <div className="bg-cyan-50/50 rounded-lg p-4 space-y-2 border border-cyan-100 mt-4">
                 <div className="flex justify-between text-xs">
                     <span className="text-slate-600 font-medium">Subtotal:</span>
@@ -250,28 +383,56 @@ export default function BillingModal({ isOpen, onClose }: BillingModalProps) {
                     <span className="font-bold text-slate-900">₹ 0</span>
                 </div>
              </div>
-
           </div>
 
-          {/* Footer */}
           <div className="p-4 px-6 border-t border-slate-100 bg-white flex justify-end gap-3 shrink-0">
-            <button 
-              onClick={onClose}
-              className="px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
-              style={{ background: 'linear-gradient(to right, #ba68c8, #f06292)' }}
-            >
-              Cancel
-            </button>
-            <button 
-              className="flex items-center gap-2 px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
-              style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}
-            >
-              <FileText size={16} />
-              Generate Bill
+            <button onClick={onClose} className="px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95" style={{ background: 'linear-gradient(to right, #ba68c8, #f06292)' }}>Cancel</button>
+            <button className="flex items-center gap-2 px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95" style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
+              <FileText size={16} /> Generate Bill
             </button>
           </div>
-
         </div>
+
+        {/* BLOCK NOTES POPUP MODAL OPEN */}
+        {isNotesEditorOpen && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 p-4">
+            <div className="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+              
+              {/* Modal Header */}
+              <div className="px-6 py-4 flex items-center justify-between border-b border-purple-100 bg-[#f3e5f5]">
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 bg-white rounded-lg shadow-sm text-[#9575cd]">
+                    <Type size={18} />
+                  </div>
+                  <h3 className="font-bold text-slate-700 text-lg">Additional Notes</h3>
+                </div>
+                <button onClick={handleCancelNotes} className="p-1 rounded-full hover:bg-white/60 text-slate-500 transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Modal Body with Rich Text Editor */}
+              <div className="p-6 overflow-y-auto max-h-[60vh]">
+                <style jsx global>{`
+                   .popup-quill .ql-toolbar { border-top-left-radius: 8px; border-top-right-radius: 8px; background: #f8fafc; border-color: #e2e8f0; }
+                   .popup-quill .ql-container { border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; border-color: #e2e8f0; height: 300px; font-size: 14px; }
+                `}</style>
+                <div className="popup-quill">
+                  <ReactQuill theme="snow" value={tempNotesContent} onChange={setTempNotesContent} modules={quillModules} placeholder="Start typing your notes here..." />
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-4 px-6 border-t bg-slate-50 flex justify-end gap-3">
+                <button onClick={handleCancelNotes} className="px-5 py-2 rounded-lg text-slate-600 font-bold text-sm hover:bg-slate-200 transition-colors">Discard</button>
+                <button onClick={handleSaveNotes} className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95" style={{ background: 'linear-gradient(to right, #66bb6a, #43a047)' }}>
+                  <Check size={16} /> Save Notes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* BLOCK NOTES POPUP MODAL CLOSE */}
 
       </div>
     </div>
