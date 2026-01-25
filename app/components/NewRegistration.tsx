@@ -3,7 +3,7 @@
 
 // BLOCK IMPORTS OPEN
 import React from 'react';
-import { Users, ReceiptText, SlidersHorizontal, CreditCard, Paperclip, Calendar } from 'lucide-react'; // Removed 'Plus' import
+import { Users, ReceiptText, SlidersHorizontal, CreditCard, Paperclip, Calendar } from 'lucide-react';
 import { FieldData } from '../page';
 // BLOCK IMPORTS CLOSE
 
@@ -73,8 +73,8 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                     style={{ width: field.width }}
                   >
                     
-                    {/* Label */}
-                    <label className="block text-[13px] font-bold text-slate-700 mb-2 truncate" title={field.label}>
+                    {/* Label - Changed font-bold to font-medium */}
+                    <label className="block text-[13px] font-medium text-slate-700 mb-2 truncate" title={field.label}>
                       {field.label} {field.required && <span className="text-red-400">*</span>}
                     </label>
 
@@ -158,8 +158,6 @@ export default function NewRegistration({ onCustomizeClick, fields }: NewRegistr
                         </div>
                       </div>
                     )}
-
-                    {/* Removed Plus Button block here */}
 
                   </div>
                 ))}
