@@ -4,22 +4,33 @@
 // BLOCK IMPORTS OPEN
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-// CRITICAL CHANGE: Importing our new RichTextEditor, NOT ReactQuill
-const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
-
-import { X, Calendar, TestTube, Search, ShoppingCart, Tag, CreditCard, Wallet, FileText, Hash, Check, Type } from 'lucide-react';
+import { X, Calendar, Search, FileText, Type, Info, Trash2, Plus, CreditCard } from 'lucide-react';
 // BLOCK IMPORTS CLOSE
 
-// BLOCK TYPES DEFINITION OPEN
+// BLOCK DYNAMIC IMPORTS OPEN
+interface RichTextEditorProps {
+  value: string;
+  onChange: (content: string) => void;
+  placeholder?: string;
+}
+
+const RichTextEditor = dynamic<RichTextEditorProps>(
+  () => import('./RichTextEditor').then((mod: any) => mod.default), 
+  { 
+    ssr: false,
+    loading: () => <div className="h-64 bg-slate-50 flex items-center justify-center text-slate-400">Loading Editor...</div>
+  }
+);
+// BLOCK DYNAMIC IMPORTS CLOSE
+
+// BLOCK INTERFACES OPEN
 interface SimpleFieldData {
   id: number;
   label: string;
   required: boolean;
   isVisible: boolean;
 }
-// BLOCK TYPES DEFINITION CLOSE
 
-// BLOCK COMPONENT DEFINITION OPEN
 interface BillingModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -34,36 +45,52 @@ interface BillingModalProps {
   };
   fields?: SimpleFieldData[]; 
 }
+// BLOCK INTERFACES CLOSE
 
+// BLOCK COMPONENT DEFINITION OPEN
 export default function BillingModal({ isOpen, onClose, patientData, fields = [] }: BillingModalProps) {
   if (!isOpen) return null;
 
-  // Payment & Transaction States
-  const [paymentModes, setPaymentModes] = useState<string[]>(['Cash']);
-  const [transactionIds, setTransactionIds] = useState<Record<string, string>>({});
-
-  // Rich Text Editor States
+  // UI States
   const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
   const [notesContent, setNotesContent] = useState('');
   const [tempNotesContent, setTempNotesContent] = useState('');
+  const [activeTab, setActiveTab] = useState('Tests/Packages');
 
-  // Helper to toggle payment modes
-  const togglePaymentMode = (mode: string) => {
-    setPaymentModes(prev => {
+  // Billing States
+  const [discountPercent, setDiscountPercent] = useState('');
+  const [discountAmount, setDiscountAmount] = useState('');
+  const [discountBy, setDiscountBy] = useState('');
+  const [discountReason, setDiscountReason] = useState('');
+  const [isDuePayment, setIsDuePayment] = useState(false);
+  const [advancePaid, setAdvancePaid] = useState('');
+  
+  // Payment Mode State (Array for checkboxes)
+  const [selectedModes, setSelectedModes] = useState<string[]>(['Cash']);
+  const [paymentDetails, setPaymentDetails] = useState<Record<string, { amount: string, txnId: string }>>({
+    'Cash': { amount: '0', txnId: '-' },
+    'UPI': { amount: '0', txnId: '' },
+    'Card': { amount: '0', txnId: '' }
+  });
+
+  const handleModeToggle = (mode: string) => {
+    setSelectedModes(prev => {
       if (prev.includes(mode)) {
-        return prev.length > 1 ? prev.filter(m => m !== mode) : prev;
+        return prev.filter(m => m !== mode);
       } else {
         return [...prev, mode];
       }
     });
   };
 
-  // Helper to update transaction ID values
-  const handleTxidChange = (mode: string, value: string) => {
-    setTransactionIds(prev => ({ ...prev, [mode]: value }));
+  const handlePaymentDetailChange = (mode: string, field: 'amount' | 'txnId', value: string) => {
+    setPaymentDetails(prev => ({
+      ...prev,
+      [mode]: { ...prev[mode], [field]: value }
+    }));
   };
 
-  // Notes handlers
+  // Notes Handlers
   const handleOpenNotes = () => {
     setTempNotesContent(notesContent); 
     setIsNotesEditorOpen(true);
@@ -78,349 +105,334 @@ export default function BillingModal({ isOpen, onClose, patientData, fields = []
     setIsNotesEditorOpen(false);
   };
 
-  const fullName = patientData ? `${patientData.firstName} ${patientData.lastName}`.trim() : 'Not specified';
+  const fullName = patientData ? `${patientData.firstName} ${patientData.lastName}`.trim() : 'Lalith Kumar';
   
+  // Format age string
   const ageString = patientData?.age && (patientData.age.Y || patientData.age.M || patientData.age.D)
     ? `${patientData.age.Y || '0'} Y ${patientData.age.M || '0'} M ${patientData.age.D || '0'} D`
-    : 'Not specified';
-
-  const isRequired = (id: number) => {
-    const field = fields.find(f => f.id === id);
-    return field ? (field.required && field.isVisible) : false;
-  };
+    : '31 year';
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-5xl rounded-xl shadow-2xl overflow-hidden flex h-[90vh] animate-in zoom-in-95 duration-200">
+      
+      {/* Main Modal Container */}
+      <div className="bg-white w-full max-w-[1200px] rounded-lg shadow-xl overflow-hidden flex flex-col h-[95vh] animate-in zoom-in-95 duration-200">
         
-        {/* LEFT SIDEBAR - Patient Summary */}
-        <div className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
-          <div className="p-4 border-b border-slate-100 bg-slate-50/50">
-             <h3 className="font-bold text-slate-700">Billing</h3>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Patient ID</label>
-               <div className="text-sm font-bold text-slate-700">260125003</div>
-             </div>
-
-             {(isRequired(3) || isRequired(4)) && (
-               <div className="space-y-1">
-                 <label className="text-xs font-bold text-slate-500 block">Name</label>
-                 <div className={`text-xs ${fullName === 'Not specified' ? 'text-slate-400 italic' : 'text-slate-700 font-medium'}`}>
-                   {fullName}
-                 </div>
-               </div>
-             )}
-
-             {isRequired(5) && (
-               <div className="space-y-1">
-                 <label className="text-xs font-bold text-slate-500 block">Age</label>
-                 <div className={`text-xs ${ageString === 'Not specified' ? 'text-slate-400 italic' : 'text-slate-700'}`}>
-                   {ageString}
-                 </div>
-               </div>
-             )}
-
-             {isRequired(6) && (
-               <div className="space-y-1">
-                 <label className="text-xs font-bold text-slate-500 block">Gender</label>
-                 <div className={`text-xs ${!patientData?.gender ? 'text-slate-400 italic' : 'text-slate-700'}`}>
-                   {patientData?.gender || 'Not specified'}
-                 </div>
-               </div>
-             )}
-
-             {isRequired(9) && (
-               <div className="space-y-1">
-                 <label className="text-xs font-bold text-slate-500 block">Phone</label>
-                 <div className={`text-xs ${!patientData?.phone ? 'text-slate-400 italic' : 'text-slate-700'}`}>
-                   {patientData?.phone || 'Not specified'}
-                 </div>
-               </div>
-             )}
-
-             {isRequired(10) && (
-               <div className="space-y-1">
-                 <label className="text-xs font-bold text-slate-500 block">Email</label>
-                 <div className={`text-xs ${!patientData?.email ? 'text-slate-400 italic' : 'text-slate-700 truncate'}`} title={patientData?.email}>
-                   {patientData?.email || 'Not specified'}
-                 </div>
-               </div>
-             )}
-
-             {isRequired(11) && (
-               <div className="space-y-1">
-                 <label className="text-xs font-bold text-slate-500 block">Address</label>
-                 <div className={`text-xs ${!patientData?.address ? 'text-slate-400 italic' : 'text-slate-700 line-clamp-2'}`} title={patientData?.address}>
-                   {patientData?.address || 'Not specified'}
-                 </div>
-               </div>
-             )}
-
-             <div className="h-px bg-slate-100 my-2"></div>
-
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block">Date & Time</label>
-               <div className="relative">
-                  <input type="text" defaultValue="25-01-2026 10:15" className="w-full px-3 py-1.5 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
-                  <Calendar size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400" />
-               </div>
-             </div>
-
-             {/* BLOCK ADDITIONAL NOTES RICH TEXT EDITOR OPEN */}
-             <div className="space-y-1">
-               <label className="text-xs font-bold text-slate-500 block mb-1">Additional Notes</label>
-               <button 
-                  onClick={handleOpenNotes}
-                  className={`w-full py-1.5 px-3 border border-dashed text-xs rounded transition-colors flex items-center justify-between group
-                    ${notesContent ? 'border-cyan-300 bg-cyan-50 text-cyan-700 hover:bg-cyan-100' : 'border-[#4dd0e1] text-[#4dd0e1] bg-cyan-50/30 hover:bg-cyan-50'}
-                  `}
-               >
-                 <span className="truncate pr-2">
-                   {notesContent ? (
-                      <span className="italic text-cyan-800">
-                        {/* Safe HTML render for preview */}
-                        <span dangerouslySetInnerHTML={{ __html: notesContent.slice(0, 30) + (notesContent.length > 30 ? '...' : '') }} />
-                      </span>
-                   ) : 'Click to add notes'}
-                 </span>
-                 <FileText size={12} className={notesContent ? "text-cyan-600 group-hover:text-cyan-800" : ""} />
-               </button>
-             </div>
-             {/* BLOCK ADDITIONAL NOTES RICH TEXT EDITOR CLOSE */}
-          </div>
-        </div>
-
-        {/* RIGHT MAIN CONTENT */}
-        <div className="flex-1 flex flex-col min-w-0 bg-white">
-          <div className="px-6 py-3 flex items-center justify-between border-b border-purple-100 bg-[#f3e5f5]/30">
-            <div className="flex items-center gap-2">
-               <div className="p-1.5 bg-purple-100 rounded text-[#9575cd]">
+        {/* HEADER BLOCK */}
+        <div 
+          className="px-6 py-3 border-b border-purple-100 flex items-center justify-between shrink-0"
+          style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }}
+        >
+           <div className="flex items-center gap-2">
+              <div className="p-1.5 bg-white/40 rounded text-[#9575cd]">
                  <CreditCard size={18} />
-               </div>
-               <h3 className="font-bold text-slate-700">Billing Details</h3>
-            </div>
-            <button onClick={onClose} className="text-slate-400 hover:text-red-500 transition-colors">
-               <X size={20} />
-            </button>
-          </div>
+              </div>
+              <h3 className="font-bold text-slate-700 text-base">Billing</h3>
+           </div>
+           <button 
+             onClick={onClose} 
+             className="p-1 rounded-full hover:bg-white/40 text-slate-600 hover:text-red-500 transition-colors"
+           >
+              <X size={20} />
+           </button>
+        </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            {/* ... Other sections (Tests, Discount, Due Payment) ... */}
-            <div>
-              <div className="flex items-center gap-2 mb-3 text-slate-700">
-                <TestTube size={18} className="text-[#9575cd]" />
-                <h4 className="font-bold text-sm">Tests & Packages</h4>
-              </div>
-              <div className="flex gap-2 mb-4">
-                 <div className="relative flex-1">
-                   <input type="text" placeholder="Search by test name or test code" className="w-full pl-9 pr-3 py-2 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
-                   <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                 </div>
-                 <select className="w-24 px-3 py-2 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] bg-white">
-                    <option>Tests</option>
-                    <option>Pkg</option>
-                 </select>
-                 <button className="flex items-center gap-2 px-4 py-2 bg-[#66bb6a] text-white text-xs font-bold rounded hover:bg-[#4caf50] transition-colors shadow-sm">
-                   <ShoppingCart size={14} />
-                   Add to Cart
-                 </button>
-              </div>
-              <div className="border border-slate-200 rounded-lg overflow-hidden">
-                <div className="bg-cyan-50/50 flex text-xs font-bold text-slate-600 py-2 border-b border-slate-200">
-                  <div className="w-16 px-4 text-center">Sr No.</div>
-                  <div className="flex-1 px-4">Test / Package</div>
-                  <div className="w-24 px-4 text-right">Price (₹)</div>
-                  <div className="w-20 px-4 text-center">Action</div>
+        {/* Body Content (Flex Row) */}
+        <div className="flex flex-1 overflow-hidden">
+          
+          {/* LEFT SIDEBAR - Patient Details */}
+          <div className="w-[280px] bg-white border-r border-slate-200 flex flex-col shrink-0 overflow-y-auto p-5">
+             
+             <div className="mb-6">
+                <h3 className="text-xs font-semibold text-slate-400 underline mb-3 cursor-pointer">Patient Details</h3>
+                <h2 className="text-lg font-bold text-slate-800 leading-tight">{fullName}</h2>
+                <p className="text-sm text-slate-500 mt-0.5">260128001</p>
+             </div>
+
+             <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                   <label className="text-xs text-slate-400 block mb-0.5">Gender</label>
+                   <p className="text-sm font-medium text-slate-700 capitalize">{patientData?.gender || 'male'}</p>
                 </div>
-                <div className="p-8 text-center text-slate-400 text-xs bg-slate-50/20 italic">
-                  No tests added
-                </div>
-              </div>
-            </div>
-
-            <div className="h-px bg-slate-100 w-full"></div>
-
-            <div>
-              <div className="flex items-center gap-2 mb-3 text-slate-700">
-                <Tag size={18} className="text-[#9575cd]" />
-                <h4 className="font-bold text-sm">Discount</h4>
-              </div>
-              <div className="grid grid-cols-4 gap-4 mb-3">
-                 <div className="space-y-1">
-                   <label className="text-xs font-semibold text-slate-500">Discount By</label>
-                   <select className="w-full px-3 py-2 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] bg-white">
-                     <option>Select</option>
-                     <option>Referral</option>
-                     <option>Coupon</option>
-                   </select>
-                 </div>
-                 <div className="space-y-1">
-                   <label className="text-xs font-semibold text-slate-500">Reason for Discount</label>
-                   <input type="text" placeholder="Enter reason" className="w-full px-3 py-2 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
-                 </div>
-                 <div className="space-y-1">
-                   <label className="text-xs font-semibold text-slate-500">Discount (%)</label>
-                   <input type="number" placeholder="0" className="w-full px-3 py-2 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
-                 </div>
-                 <div className="space-y-1">
-                   <label className="text-xs font-semibold text-slate-500">Discount (₹)</label>
-                   <input type="number" placeholder="0" className="w-full px-3 py-2 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
-                 </div>
-              </div>
-              <button className="flex items-center gap-2 px-4 py-1.5 bg-[#ff9800] text-white text-xs font-bold rounded hover:bg-[#f57c00] transition-colors shadow-sm">
-                 <Tag size={12} />
-                 Apply Discount
-              </button>
-            </div>
-
-            <div className="h-px bg-slate-100 w-full"></div>
-
-            <div>
-              <div className="flex items-center gap-2 mb-3 text-slate-700">
-                <Wallet size={18} className="text-[#9575cd]" />
-                <h4 className="font-bold text-sm">Due Payment</h4>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                 <div className="space-y-1">
-                   <label className="text-xs font-semibold text-slate-500">Advance Payment (₹)</label>
-                   <input type="number" placeholder="0" className="w-full px-3 py-2 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]" />
-                 </div>
-                 <div className="space-y-1">
-                   <label className="text-xs font-semibold text-slate-500">Due Amount (₹)</label>
-                   <input type="number" placeholder="0.00" readOnly className="w-full px-3 py-2 rounded border border-slate-300 text-xs bg-slate-50 text-slate-500" />
-                 </div>
-              </div>
-            </div>
-
-            <div className="h-px bg-slate-100 w-full"></div>
-
-            {/* BLOCK PAYMENT MODES OPEN */}
-            <div className="space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-3 text-slate-700">
-                   <CreditCard size={18} className="text-[#9575cd]" />
-                   <h4 className="font-bold text-sm">Payment</h4>
-                </div>
-                <label className="text-xs font-semibold text-slate-500 block mb-2">Payment Mode (Split payment enabled)</label>
-                <div className="flex gap-4">
-                   {['Cash', 'Card', 'UPI', 'Insurance'].map((mode) => {
-                     const isSelected = paymentModes.includes(mode);
-                     return (
-                       <label 
-                         key={mode} 
-                         onClick={() => togglePaymentMode(mode)}
-                         className={`
-                          flex items-center gap-2 px-4 py-2 rounded border text-xs cursor-pointer transition-all
-                          ${isSelected ? 'border-[#4dd0e1] bg-cyan-50 text-cyan-700 font-bold shadow-sm' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}
-                        `}
-                       >
-                        <div className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center transition-colors ${isSelected ? 'bg-[#4dd0e1] border-[#4dd0e1]' : 'border-slate-300 bg-white'}`}>
-                          {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full"></div>}
-                        </div>
-                        {mode}
-                      </label>
-                     );
-                   })}
-                </div>
-              </div>
-              {(paymentModes.includes('Card') || paymentModes.includes('UPI')) && (
-                <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                   {paymentModes.includes('Card') && (
-                     <div className="space-y-1.5">
-                       <label className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5">
-                         <CreditCard size={12} className="text-slate-400" />
-                         Card Transaction ID
-                       </label>
-                       <div className="relative">
-                         <input type="text" placeholder="Enter Card Txn ID" value={transactionIds['Card'] || ''} onChange={(e) => handleTxidChange('Card', e.target.value)} className="w-full pl-8 pr-3 py-1.5 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] placeholder:text-slate-300" />
-                         <Hash size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                       </div>
-                     </div>
-                   )}
-                   {paymentModes.includes('UPI') && (
-                     <div className="space-y-1.5">
-                       <label className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5">
-                         <Wallet size={12} className="text-slate-400" />
-                         UPI Transaction ID
-                       </label>
-                       <div className="relative">
-                         <input type="text" placeholder="Enter UPI Txn ID" value={transactionIds['UPI'] || ''} onChange={(e) => handleTxidChange('UPI', e.target.value)} className="w-full pl-8 pr-3 py-1.5 rounded border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#4dd0e1] placeholder:text-slate-300" />
-                         <Hash size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                       </div>
-                     </div>
-                   )}
-                </div>
-              )}
-            </div>
-            {/* BLOCK PAYMENT MODES CLOSE */}
-
-             <div className="bg-cyan-50/50 rounded-lg p-4 space-y-2 border border-cyan-100 mt-4">
-                <div className="flex justify-between text-xs">
-                    <span className="text-slate-600 font-medium">Subtotal:</span>
-                    <span className="font-bold text-slate-700">₹ 0</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                    <span className="text-slate-600 font-medium">Discount:</span>
-                    <span className="font-bold text-slate-700">₹ 0</span>
-                </div>
-                <div className="h-px bg-cyan-200/50 my-1"></div>
-                <div className="flex justify-between text-sm">
-                    <span className="font-bold text-slate-800">Total Amount:</span>
-                    <span className="font-bold text-slate-900">₹ 0</span>
+                <div>
+                   <label className="text-xs text-slate-400 block mb-0.5">Age</label>
+                   <p className="text-sm font-medium text-slate-700">{ageString}</p>
                 </div>
              </div>
+
+             <div className="mb-6">
+                <label className="text-xs text-slate-400 block mb-0.5">Contact Number</label>
+                <p className="text-sm font-medium text-slate-700">{patientData?.phone || 'Not specified'}</p>
+             </div>
+
+             <div className="h-px bg-slate-100 w-full mb-6"></div>
+
+             <div className="mb-4">
+                <label className="text-xs text-slate-400 block mb-1.5">Billing Date</label>
+                <div className="relative">
+                   <input 
+                      type="datetime-local" 
+                      defaultValue="2026-01-28T01:27" 
+                      className="w-full px-3 py-2 rounded border border-slate-300 text-sm text-slate-700 focus:outline-none focus:border-slate-400" 
+                   />
+                </div>
+             </div>
+
+             <button 
+               onClick={handleOpenNotes}
+               className="w-full py-2 px-3 border border-slate-300 rounded text-sm text-slate-600 font-medium flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors"
+             >
+               <Plus size={16} /> Add Note on Bill
+             </button>
           </div>
 
-          <div className="p-4 px-6 border-t border-slate-100 bg-white flex justify-end gap-3 shrink-0">
-            <button onClick={onClose} className="px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95" style={{ background: 'linear-gradient(to right, #ba68c8, #f06292)' }}>Cancel</button>
-            <button className="flex items-center gap-2 px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95" style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>
-              <FileText size={16} /> Generate Bill
-            </button>
+          {/* RIGHT CONTENT - Main Billing Area */}
+          <div className="flex-1 bg-white flex flex-col overflow-hidden">
+             
+             {/* 1. TOP TABLE SECTION */}
+             <div className="flex-1 overflow-y-auto border-b border-slate-200">
+                <table className="w-full text-left border-collapse">
+                   <thead className="bg-slate-50 sticky top-0 z-10">
+                      <tr>
+                         <th className="py-2.5 px-4 text-xs font-semibold text-slate-600 border-b border-slate-200 w-16">Sr No.</th>
+                         <th className="py-2.5 px-4 text-xs font-semibold text-slate-600 border-b border-slate-200">Test / Package</th>
+                         <th className="py-2.5 px-4 text-xs font-semibold text-slate-600 border-b border-slate-200 w-24">Price</th>
+                         <th className="py-2.5 px-4 text-xs font-semibold text-slate-600 border-b border-slate-200 w-24">Discount</th>
+                         <th className="py-2.5 px-4 text-xs font-semibold text-slate-600 border-b border-slate-200 w-20 text-center">
+                            <span className="flex items-center gap-1"><input type="checkbox" className="rounded border-slate-300" /> Urgent</span>
+                         </th>
+                         <th className="py-2.5 px-4 text-xs font-semibold text-slate-600 border-b border-slate-200 w-20 text-center">Action</th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                      {/* Empty State */}
+                      <tr>
+                         <td colSpan={6} className="h-48 text-center align-middle">
+                            <div className="flex flex-col items-center justify-center text-slate-300">
+                               <div className="w-16 h-16 mb-2 bg-slate-50 rounded-full flex items-center justify-center">
+                                  <div className="w-10 h-8 border-2 border-slate-200 border-dashed rounded"></div>
+                               </div>
+                               <span className="text-sm font-medium">No data</span>
+                            </div>
+                         </td>
+                      </tr>
+                   </tbody>
+                </table>
+             </div>
+
+             {/* 2. MIDDLE CONTROLS SECTION */}
+             <div className="p-4 border-b border-slate-200 bg-white shrink-0">
+                <div className="flex items-center justify-between">
+                   
+                   {/* Block 1: Search & Type */}
+                   <div className="flex items-center gap-3">
+                      <div className="relative w-80">
+                         <input 
+                            type="text" 
+                            placeholder="Search by test name or test code" 
+                            className="w-full pl-9 pr-3 py-2 rounded border border-slate-300 text-sm focus:outline-none focus:ring-1 focus:ring-slate-400"
+                         />
+                         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      </div>
+                      
+                      <select className="px-3 py-2 rounded border border-slate-300 text-sm focus:outline-none bg-white min-w-[100px]">
+                         <option>Tests</option>
+                         <option>Packages</option>
+                      </select>
+                   </div>
+
+                   {/* Block 2: Toggles */}
+                   <div className="flex bg-slate-100 rounded p-1 gap-1">
+                      <button 
+                         onClick={() => setActiveTab('Tests/Packages')}
+                         className={`px-4 py-1.5 rounded text-xs font-medium transition-all ${activeTab === 'Tests/Packages' ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
+                      >
+                         Tests/Packages
+                      </button>
+                      <button 
+                         onClick={() => setActiveTab('Other Charges')}
+                         className={`px-4 py-1.5 rounded text-xs font-medium transition-all ${activeTab === 'Other Charges' ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
+                      >
+                         Other Charges
+                      </button>
+                   </div>
+                   
+                </div>
+             </div>
+
+             {/* 3. BOTTOM BILLING GRID */}
+             <div className="p-4 bg-white shrink-0 h-[320px] overflow-y-auto">
+                <div className="grid grid-cols-12 gap-8 h-full">
+                   
+                   {/* Column 1: Discount Info */}
+                   <div className="col-span-4 space-y-4 border-r border-slate-100 pr-4">
+                      <div className="space-y-1">
+                         <label className="text-xs text-slate-600 font-medium">Discount(%) (Optional)</label>
+                         <input type="number" value={discountPercent} onChange={(e) => setDiscountPercent(e.target.value)} className="w-full px-3 py-2 rounded border border-slate-300 text-sm focus:outline-none focus:border-slate-400" placeholder="0" />
+                      </div>
+                      <div className="space-y-1">
+                         <label className="text-xs text-slate-600 font-medium">Discount(₹) (Optional)</label>
+                         <input type="number" value={discountAmount} onChange={(e) => setDiscountAmount(e.target.value)} className="w-full px-3 py-2 rounded border border-slate-300 text-sm focus:outline-none focus:border-slate-400" placeholder="0" />
+                      </div>
+                      <div className="space-y-1">
+                         <label className="text-xs text-slate-600 font-medium">Discounted By <span className="text-slate-400 font-normal">(Optional)</span></label>
+                         <select value={discountBy} onChange={(e) => setDiscountBy(e.target.value)} className="w-full px-3 py-2 rounded border border-slate-300 text-sm focus:outline-none focus:border-slate-400 text-slate-500 bg-white">
+                            <option value="">Select a person</option>
+                            <option value="Dr. Smith">Dr. Smith</option>
+                         </select>
+                      </div>
+                      <div className="space-y-1">
+                         <label className="text-xs text-slate-600 font-medium">Reason of Discount <span className="text-slate-400 font-normal">(Optional)</span></label>
+                         <textarea value={discountReason} onChange={(e) => setDiscountReason(e.target.value)} rows={2} className="w-full px-3 py-2 rounded border border-slate-300 text-sm focus:outline-none focus:border-slate-400 resize-none" placeholder="Enter Reason of Discount"></textarea>
+                      </div>
+                   </div>
+
+                   {/* Column 2: Payment & Due */}
+                   <div className="col-span-4 space-y-5 border-r border-slate-100 pr-4">
+                      <div className="flex items-center gap-2">
+                         <input 
+                            type="checkbox" 
+                            id="duePayment" 
+                            checked={isDuePayment} 
+                            onChange={(e) => setIsDuePayment(e.target.checked)} 
+                            className="w-4 h-4 rounded border-slate-300 text-slate-600 focus:ring-0" 
+                         />
+                         <label htmlFor="duePayment" className="text-sm text-slate-700 font-medium cursor-pointer">Due Payment</label>
+                      </div>
+
+                      <div className="space-y-1">
+                         <label className="text-xs text-slate-600 font-medium flex items-center gap-1">
+                            Advance Paid <Info size={12} className="text-slate-400" />
+                         </label>
+                         <input type="number" value={advancePaid} onChange={(e) => setAdvancePaid(e.target.value)} className="w-full px-3 py-2 rounded border border-slate-300 text-sm bg-slate-50 focus:outline-none focus:border-slate-400" placeholder="0" />
+                      </div>
+
+                      <div className="pt-2">
+                         <label className="text-xs text-slate-800 font-bold mr-2">Due Amount</label>
+                         <span className="inline-block px-2 py-0.5 bg-red-50 text-red-500 text-xs font-bold rounded border border-red-100">₹0.00</span>
+                      </div>
+                   </div>
+
+                   {/* Column 3: Summary & Payment Modes */}
+                   <div className="col-span-4 flex flex-col h-full">
+                      {/* Summary Block */}
+                      <div className="space-y-3 pb-4 border-b border-slate-200">
+                         <h4 className="text-xs font-bold text-slate-800 mb-2">Summary</h4>
+                         <div className="flex justify-between text-sm">
+                            <span className="text-slate-600">Amount</span>
+                            <span className="font-medium text-slate-800">₹0.00</span>
+                         </div>
+                         <div className="flex justify-between text-sm">
+                            <span className="text-slate-600">Discount</span>
+                            <span className="font-medium text-slate-800">- ₹0.00</span>
+                         </div>
+                         <div className="flex justify-between text-base pt-2">
+                            <span className="font-bold text-slate-800">Total Amount</span>
+                            <span className="font-bold text-slate-900">₹0.00</span>
+                         </div>
+                      </div>
+
+                      {/* Payment Modes Block */}
+                      <div className="pt-4 flex-1 overflow-auto">
+                         <h4 className="text-xs font-bold text-slate-800 mb-2">Payment Modes</h4>
+                         <div className="flex gap-4 mb-3">
+                            {['Cash', 'UPI', 'Card'].map(mode => (
+                               <label key={mode} className="flex items-center gap-2 cursor-pointer">
+                                  <input 
+                                     type="checkbox" 
+                                     checked={selectedModes.includes(mode)}
+                                     onChange={() => handleModeToggle(mode)}
+                                     className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-0" 
+                                  />
+                                  <span className="text-sm text-slate-700">{mode}</span>
+                               </label>
+                            ))}
+                         </div>
+
+                         {/* Dynamic Payment Inputs Table */}
+                         {selectedModes.length > 0 && (
+                            <div className="border border-slate-200 rounded overflow-hidden">
+                               <div className="grid grid-cols-[80px_1fr_1fr] bg-slate-50 text-[10px] font-bold text-slate-600 py-1.5 px-2 border-b border-slate-200">
+                                  <div>Mode</div>
+                                  <div className="px-2">Paid Amount</div>
+                                  <div className="px-2">Transaction ID</div>
+                               </div>
+                               {selectedModes.map(mode => (
+                                  <div key={mode} className="grid grid-cols-[80px_1fr_1fr] py-1.5 px-2 border-b border-slate-100 last:border-0 items-center">
+                                     <div className="text-xs font-medium text-slate-700">{mode}</div>
+                                     <div className="px-1">
+                                        <input 
+                                           type="text" 
+                                           value={paymentDetails[mode]?.amount}
+                                           onChange={(e) => handlePaymentDetailChange(mode, 'amount', e.target.value)}
+                                           className="w-full px-2 py-1 rounded border border-slate-300 text-xs focus:outline-none focus:border-blue-400"
+                                        />
+                                     </div>
+                                     <div className="px-1">
+                                        <input 
+                                           type="text" 
+                                           value={paymentDetails[mode]?.txnId}
+                                           placeholder={mode === 'Cash' ? '-' : 'Transaction ID'}
+                                           disabled={mode === 'Cash'}
+                                           onChange={(e) => handlePaymentDetailChange(mode, 'txnId', e.target.value)}
+                                           className="w-full px-2 py-1 rounded border border-slate-300 text-xs focus:outline-none focus:border-blue-400 disabled:bg-slate-50 disabled:text-slate-400"
+                                        />
+                                     </div>
+                                  </div>
+                               ))}
+                            </div>
+                         )}
+                      </div>
+                   </div>
+
+                </div>
+             </div>
+
           </div>
         </div>
 
-        {/* BLOCK NOTES POPUP MODAL OPEN */}
+        {/* Footer Actions - UPDATED TO SAVE & GENERATE BILL */}
+        <div className="p-3 bg-white border-t border-slate-200 flex justify-end gap-3 shrink-0">
+           <button 
+             className="px-6 py-2 rounded text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+             style={{ background: 'linear-gradient(to right, #ba68c8, #f06292)' }}
+           >
+              Save
+           </button>
+           <button 
+             className="px-6 py-2 rounded text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95"
+             style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}
+           >
+              Generate Bill
+           </button>
+        </div>
+
+        {/* NOTES POPUP MODAL */}
         {isNotesEditorOpen && (
           <div className="fixed inset-0 z-[300] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 p-4">
-            <div className="bg-white w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
-              
-              {/* Modal Header */}
-              <div className="px-6 py-4 flex items-center justify-between border-b border-purple-100 bg-[#f3e5f5]">
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 bg-white rounded-lg shadow-sm text-[#9575cd]">
+            <div className="bg-white w-full max-w-4xl h-[600px] rounded-lg shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
+              <div 
+                className="px-6 py-4 flex items-center justify-between shrink-0 rounded-t-lg"
+                style={{ background: 'linear-gradient(to right, #b3e5fc, #e1bee7)' }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-white/40 rounded text-[#9575cd]">
                     <Type size={18} />
                   </div>
-                  <h3 className="font-bold text-slate-700 text-lg">Additional Notes</h3>
+                  <h3 className="font-bold text-slate-700 text-lg">Additional Note</h3>
                 </div>
-                <button onClick={handleCancelNotes} className="p-1 rounded-full hover:bg-white/60 text-slate-500 transition-colors">
-                  <X size={20} />
-                </button>
+                <button onClick={handleCancelNotes} className="p-1 rounded-full hover:bg-white/40 text-slate-600 hover:text-red-500 transition-colors"><X size={20} /></button>
               </div>
-
-              {/* Modal Body with Rich Text Editor */}
-              <div className="p-6 overflow-y-auto max-h-[60vh] flex flex-col min-h-[400px]">
-                {/* CRITICAL FIX: Replaced ReactQuill with our RichTextEditor */}
-                <RichTextEditor 
-                  value={tempNotesContent} 
-                  onChange={setTempNotesContent} 
-                  placeholder="Start typing your notes here..." 
-                />
+              <div className="flex-1 bg-white relative flex flex-col min-h-0">
+                <RichTextEditor value={tempNotesContent} onChange={setTempNotesContent} placeholder="Start typing your note here..." />
               </div>
-
-              {/* Modal Footer */}
-              <div className="p-4 px-6 border-t bg-slate-50 flex justify-end gap-3">
-                <button onClick={handleCancelNotes} className="px-5 py-2 rounded-lg text-slate-600 font-bold text-sm hover:bg-slate-200 transition-colors">Discard</button>
-                <button onClick={handleSaveNotes} className="flex items-center gap-2 px-6 py-2 rounded-lg text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95" style={{ background: 'linear-gradient(to right, #66bb6a, #43a047)' }}>
-                  <Check size={16} /> Save Notes
-                </button>
+              <div className="p-4 px-6 border-t border-slate-200 bg-white flex justify-end gap-3 shrink-0 rounded-b-lg">
+                <button onClick={handleCancelNotes} className="px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95" style={{ background: 'linear-gradient(to right, #ba68c8, #f06292)' }}>Cancel</button>
+                <button onClick={handleSaveNotes} className="px-6 py-2 rounded-[5px] text-white font-bold text-sm shadow-md transition-all hover:opacity-90 active:scale-95" style={{ background: 'linear-gradient(to right, #4dd0e1, #64b5f6)' }}>Save Note</button>
               </div>
             </div>
           </div>
         )}
-        {/* BLOCK NOTES POPUP MODAL CLOSE */}
 
       </div>
     </div>
