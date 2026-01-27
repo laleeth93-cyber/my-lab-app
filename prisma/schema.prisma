@@ -1,0 +1,137 @@
+// FILE: prisma/schema.prisma
+
+// BLOCK GENERATOR OPEN
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+// BLOCK GENERATOR CLOSE
+
+// BLOCK PATIENT MODEL OPEN
+// Matches all fields from your 'NewRegistration.tsx' and 'page.tsx'
+model Patient {
+  id            Int      @id @default(autoincrement())
+  patientId     String   @unique // The "260125003" ID
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Basic Info
+  designation   String?
+  firstName     String
+  lastName      String
+  gender        String
+  
+  // Age is complex (Y/M/D), so we store it as separate integers or a string
+  ageY          Int?     @default(0)
+  ageM          Int?     @default(0)
+  ageD          Int?     @default(0)
+
+  // Vitals
+  weight        String?
+  height        String?
+
+  // Contact Info
+  phone         String
+  email         String?
+  address       String?  @db.Text // @db.Text allows long addresses
+
+  // Identification (Hidden fields in your UI, but we need space for them)
+  aadhaar       String?
+  uhid          String?
+  passport      String?
+  
+  // Referral & Collection
+  referralType  String?  // 'Self', 'Doctor', etc.
+  refDoctor     String?
+  collectionAt  String?  // 'Home', 'Lab'
+  
+  // Relationships
+  bills         Bill[]   // A patient can have many bills
+}
+// BLOCK PATIENT MODEL CLOSE
+
+// BLOCK TEST CATALOG MODEL OPEN
+// This acts as your "Rate List" for the search bar
+model Test {
+  id            Int      @id @default(autoincrement())
+  code          String   @unique // Short code like "CBC"
+  name          String
+  price         Float
+  type          String   @default("Test") // "Test" or "Package"
+  department    String?
+  
+  // For result entry later
+  normalRange   String?
+  units         String?
+
+  billItems     BillItem[]
+}
+// BLOCK TEST CATALOG MODEL CLOSE
+
+// BLOCK BILLING MODEL OPEN
+// Matches your new 'BillingModal.tsx' logic
+model Bill {
+  id            Int      @id @default(autoincrement())
+  billNumber    String   @unique // Auto-generated like "INV-2026-001"
+  date          DateTime @default(now())
+  
+  // Link to Patient
+  patientId     Int
+  patient       Patient  @relation(fields: [patientId], references: [id])
+
+  // Financials
+  subTotal      Float
+  discountPercent Float?
+  discountAmount  Float?
+  discountReason  String?
+  netAmount       Float
+  
+  // Due Payment Logic
+  paidAmount    Float
+  dueAmount     Float
+  isFullyPaid   Boolean  @default(false)
+  
+  // Relationships
+  items         BillItem[]
+  payments      Payment[] // Supports split payments (Cash + UPI)
+}
+
+// Individual tests inside a bill
+model BillItem {
+  id        Int     @id @default(autoincrement())
+  billId    Int
+  bill      Bill    @relation(fields: [billId], references: [id])
+  
+  testId    Int
+  test      Test    @relation(fields: [testId], references: [id])
+  
+  price     Float   // Stored separately in case price changes later
+  isUrgent  Boolean @default(false)
+}
+
+// Stores the "Split Payment" modes (Cash, Card, UPI)
+model Payment {
+  id            Int      @id @default(autoincrement())
+  billId        Int
+  bill          Bill     @relation(fields: [billId], references: [id])
+  
+  mode          String   // 'Cash', 'UPI', 'Card', 'Insurance'
+  amount        Float
+  transactionId String?  // Optional for Cash
+  date          DateTime @default(now())
+}
+// BLOCK BILLING MODEL CLOSE
+
+// BLOCK DOCTOR MODEL OPEN
+// For the "Referral" dropdown
+model Doctor {
+  id        Int     @id @default(autoincrement())
+  name      String
+  code      String?
+  hospital  String?
+}
+// BLOCK DOCTOR MODEL CLOSE
